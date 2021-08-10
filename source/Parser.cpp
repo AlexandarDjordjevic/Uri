@@ -10,90 +10,181 @@ namespace URI{
     Parser::~Parser(){
 
     }
-    //ne znam nacim da ukljucim ovu funkciju iz HTTP biblioteke 
-    std::vector<std::string> splitString(const std::string& s, std::string rgx_str ){  
-        std::vector<std::string> tokens;
-        std::regex pattern (rgx_str);
-        std::sregex_token_iterator iter(s.begin(),s.end(), pattern,-1);
-        std::sregex_token_iterator end;
-        while(iter != end){
-            tokens.push_back(*iter);
-            ++iter;
-        }
-        return tokens;
-    }
-    bool Parser::parse(const std::string& uri){
-        
-        std::vector<std::string> uri_components = extract_component(uri,"^([a-z][a-z0-9+.-]*):");
-        if(uri_components.size()>0){
-            std::string scheme = uri_components[2];
-            m_scheme = scheme;
-        }
-        else{
-            return false;
-        }
-        uri_components = extract_component(uri_components[1], "^(\\/\\/[a-z][a-z0-9+.-]*)"); 
-        if(uri_components.size()>0){
-            if(uri_components[2].length()>0){
-                std::string authority = uri_components[2];
-                m_authority = authority;
-            }
-        }
-        uri_components = extract_component(uri_components[1], "^(\\/[a-z][a-z0-9+.-/]*)(/?)"); 
-        if(uri_components.size()>0){
-            if(uri_components[2].length()>0){
-                std::string path = uri_components[2];
-                m_path = path;
-            }
-        }
-        else{
-            return false;
-        }
-        uri_components = extract_component(uri_components[1], "^(\\/[a-z][a-z0-9+.-/]*)(/?)"); 
-        if(uri_components.size()>0){
-            if(uri_components[2].length()>0){
-                std::string path = uri_components[2];
-                m_path = path;
-            }
-        }
-        uri_components = extract_component(uri_components[1], "^(\\?[a-z][a-z0-9+.-=&]*)(#)"); 
-        if(uri_components.size()>0){
-            if(uri_components[2].length()>0){
-                std::string query = uri_components[2];
-                m_query = query;
-            }
-        }
-        uri_components = extract_component(uri_components[1], "^(\\?[a-z][a-z0-9+.-=&]*)(#)"); 
-        if(uri_components.size()>0){
-            if(uri_components[2].length()>0){
-                std::string fragments = uri_components[2];
-                m_fragment = fragments;
-            }
-        }
+    
+    bool Parser::parse(const std::string& uri, std::string& protocol_name){
 
+        std::string wcopy_uri = uri; //working copy uri
+        Scheme protocol_scheme =  protocolNormalization(protocol_name);
+        define_regex_maping(protocol_scheme);
+
+
+        if(is_Absolute_URI(wcopy_uri ) == false ){
+            return false; 
+        }
+        // if(is_Relative_URI(wcopy_uri)== false){
+        //     return false;
+        // }
         return true;
     }
 
     
    
-    std::vector<std::string> Parser::extract_component(const std::string& uri, std::string rgx_str){
-        std::regex rgx(rgx_str);
+    std::string Parser::extract_component( std::string& uri_part, std::string rgx_str){
+        const std::regex component_rgx(rgx_str);
+        const std::string part_copy = uri_part;
         std::smatch match;
-        std::vector<std::string> component_uri;
+       
+        
+        if (std::regex_search(part_copy.begin(),part_copy.end(), match, component_rgx))
+        {
 
-        if (std::regex_search(uri.begin(), uri.end(), match, rgx)){
-            std::string k = match[1];
-
-            component_uri = URI::splitString(uri, rgx_str);
-            component_uri.push_back(k);
+            
+            uri_part = std::regex_replace(part_copy,component_rgx,""); 
         }
-        return component_uri;
+        return match[1];
     }
     
+    bool Parser::is_Absolute_URI(std::string& wcopy_uri){ // ako je URI absolute authority mora da ima host 
+       
+
+        auto it = regex_patterns_table.find(URI::scheme_regex_expresions::scheme_reg);
+        const std::string scheme_rgx(it->second);
+
+        m_scheme = extract_component( wcopy_uri, scheme_rgx);
+
+        if( m_scheme.length()<=0 )
+        {
+            return false;
+        }
+        if(wcopy_uri.length()<= 0)
+        {
+            return false; 
+        }
+
+        auto it2 = regex_patterns_table.find(URI::scheme_regex_expresions::autority);
+        const std::string authority_rgx(it2->second);
+
+        m_authority = extract_component(wcopy_uri, authority_rgx );
+        if(m_authority.length()<= 0)
+        {
+            return false;
+        }
 
 
+        auto it3 = regex_patterns_table.find(URI::scheme_regex_expresions::path);
+        const std::string path_rgx(it3->second);
+        m_path = extract_component(wcopy_uri,path_rgx);
+        if(m_path.length()<= 0)
+        {
+            return false;
+        }
+        if(wcopy_uri.length() <= 0)
+        {
+            return false;
+        }
+
+            auto it4 = regex_patterns_table.find(URI::scheme_regex_expresions::query);
+            const std::string query_rgx(it4->second);
+            m_query = extract_component(wcopy_uri,query_rgx );
+            
+            if(wcopy_uri.length() > 0){
+
+                 auto it5 = regex_patterns_table.find(URI::scheme_regex_expresions::fragments);
+                const std::string fragment_rgx(it5->second);
+                m_fragment = extract_component(wcopy_uri,fragment_rgx );
+
+                if(wcopy_uri.length() > 0){ 
+                    
+                    //ne bi trebalo da posle fragmenta ostane nesto 
+                    return false; 
+                }
+            }
+            
+
+        
+        return true;
+        
+    }
+    bool Parser::is_Relative_URI(std::string&relative_uri){
+        
+
+        auto it = regex_patterns_table.find(URI::scheme_regex_expresions::autority);
+        const std::string authority_rgx(it->second);
+        m_authority = extract_component( relative_uri, authority_rgx );
+
+        
+
+         it = regex_patterns_table.find(URI::scheme_regex_expresions::path);
+        const std::string path_rgx(it->second);
+        m_path = extract_component(relative_uri,path_rgx);
+       
+
+         it = regex_patterns_table.find(URI::scheme_regex_expresions::query);
+        const std::string query_rgx(it->second);
+        m_query = extract_component(relative_uri,query_rgx );
+
+         it = regex_patterns_table.find(URI::scheme_regex_expresions::fragments);
+        const std::string fragment_rgx(it->second);
+        m_fragment = extract_component(relative_uri,fragment_rgx );
+
+        if(m_authority.length()<= 0 && m_path.length() <= 0 ) 
+        {
+            return false;
+        }  
+        return true;
+    }
+    Scheme Parser::protocolNormalization(std::string &protocol_name)
+    {
+        
+        
+        std::for_each(protocol_name.begin(), protocol_name.end(), [](char &c)
+        { 
+            c = ::tolower(c); 
+        });
+        Scheme protocol_scheme;
+        
+        auto it = table.find(protocol_name);
+        if (it != table.end())
+        {
+            protocol_scheme = it->second; 
+        }
+        return protocol_scheme;
+    }
+    void Parser::define_regex_maping(Scheme&protocol)
+    {
+        switch (protocol)
+        {
+        case (Scheme::http): 
+                regex_patterns_table = { 
+                {URI::scheme_regex_expresions::scheme_reg,"^(http:)"},
+                {URI::scheme_regex_expresions::autority,"^\\/\\/([a-z0-9+.-]*)"},
+                {URI::scheme_regex_expresions::path,"^(\\/[a-z0-9+.-\\/]*)"},
+                {URI::scheme_regex_expresions::query,"(^\\?[(a-z0-9+)=(a-z0-9+&)]*)"},
+                {URI::scheme_regex_expresions::fragments,"(^\\#[(a-z0-9+)=(a-z0-9+&)]*)"}
+                };
     
-    
-    
+
+            // code block
+            break;
+        case (Scheme::https):regex_patterns_table = {
+                {URI::scheme_regex_expresions::scheme_reg,"^(https:)"},
+                {URI::scheme_regex_expresions::autority,"^\\/\\/([a-z0-9+.-]*)"},
+                {URI::scheme_regex_expresions::path,"^(\\/[a-z0-9+.-\\/]*)(\\#|\\?)"},
+                {URI::scheme_regex_expresions::query,"(^\\?[(a-z0-9+)=(a-z0-9+&)]*)"},
+                {URI::scheme_regex_expresions::fragments,"(^\\#[(a-z0-9+)=(a-z0-9+&)]*)"}
+                };
+            // code block
+            break;
+        default:
+        regex_patterns_table = {
+                {URI::scheme_regex_expresions::scheme_reg,"^([a-z][a-z0-9+.-]*):"},
+                {URI::scheme_regex_expresions::autority,"^\\/\\/([a-z0-9+.-]*)"},
+                {URI::scheme_regex_expresions::path,"^(\\/[a-z0-9+.-\\/]*)(\\#|\\?)|:\\/[a-z0-9+.-\\/]*)(:)"},
+                {URI::scheme_regex_expresions::query,"(^\\?[(a-z0-9+)=(a-z0-9+&)]*)"},
+                {URI::scheme_regex_expresions::fragments,"(^\\#[(a-z0-9+)=(a-z0-9+&)]*)"}
+                };
+            // code block
+        }
+    }
 
 }//namespace Namespace

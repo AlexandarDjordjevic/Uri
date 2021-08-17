@@ -11,120 +11,142 @@ namespace URI{
 
     }
     
-    bool Parser::parse(const std::string& uri, std::string& protocol_name){
+   
+    
+   
+    std::string Parser::extract_component( std::string& uri, std::string rgx_str){
+        const std::regex scheme_rgx(rgx_str);
+        const std::string uri_cw = uri;
+        std::smatch match;
+       
+        
+        if (std::regex_search(uri_cw.begin(),uri_cw.end(), match, scheme_rgx))
+        {
 
+            
+            uri = std::regex_replace(uri_cw,scheme_rgx,""); 
+        }
+        return match[1];
+    }
+
+    std::string Parser::extract_scheme(const std::string& uri){
+        const std::regex scheme_rgx("^([a-zA-Z][a-z0-9+.-]*):");
+        
+        std::smatch match;
+       
+        if(std::regex_search(uri.begin(),uri.end(), match, scheme_rgx)){
+            return match[1];
+        }
+        else{
+            return "";
+        }
+       
+    }
+
+    std::string Parser::extract_scheme(const std::string& uri){
+        const std::regex scheme_rgx("^([a-zA-Z][a-z0-9+.-]*):");
+        
+        std::smatch match;
+       
+        if(std::regex_search(uri.begin(),uri.end(), match, scheme_rgx)){
+            return match[1];
+        }
+        else{
+            return "";
+        }
+       
+    }
+    std::string Parser::extract_authority(const std::string& uri){
+        const std::regex scheme_rgx("^([a-zA-Z][a-z0-9+.-]*):");
+        
+        std::smatch match;
+       
+        if(std::regex_search(uri.begin(),uri.end(), match, scheme_rgx)){
+            return match[1];
+        }
+        else{
+            return "";
+        }
+       
+    }
+    
+    void Parser::parse(const std::string& uri, std::string& protocol_name){  // ako je URI absolute authority mora da ima host 
         std::string wcopy_uri = uri; //working copy uri
         Scheme protocol_scheme =  protocolNormalization(protocol_name);
         define_regex_maping(protocol_scheme);
 
+        auto map_result = regex_patterns_table.find(URI::scheme_regex_expresions::scheme_reg);
+        const std::string scheme_rgx(map_result->second);
 
-        if(is_Absolute_URI(wcopy_uri ) == false ){
-            return false; 
-        }
-        // if(is_Relative_URI(wcopy_uri)== false){
-        //     return false;
-        // }
-        return true;
-    }
+      //  m_scheme = extract_component( wcopy_uri, scheme_rgx);
 
-    
-   
-    std::string Parser::extract_component( std::string& uri_part, std::string rgx_str){
-        const std::regex component_rgx(rgx_str);
-        const std::string part_copy = uri_part;
-        std::smatch match;
-       
         
-        if (std::regex_search(part_copy.begin(),part_copy.end(), match, component_rgx))
-        {
-
-            
-            uri_part = std::regex_replace(part_copy,component_rgx,""); 
-        }
-        return match[1];
-    }
-    
-    bool Parser::is_Absolute_URI(std::string& wcopy_uri){ // ako je URI absolute authority mora da ima host 
-       
-
-        auto it = regex_patterns_table.find(URI::scheme_regex_expresions::scheme_reg);
-        const std::string scheme_rgx(it->second);
-
-        m_scheme = extract_component( wcopy_uri, scheme_rgx);
-
-        if( m_scheme.length()<=0 )
-        {
-            return false;
-        }
         if(wcopy_uri.length()<= 0)
         {
-            return false; 
+            return ; 
         }
 
-        auto it2 = regex_patterns_table.find(URI::scheme_regex_expresions::autority);
-        const std::string authority_rgx(it2->second);
+        map_result = regex_patterns_table.find(URI::scheme_regex_expresions::autority);
+        const std::string authority_rgx(map_result->second);
 
         m_authority = extract_component(wcopy_uri, authority_rgx );
-        if(m_authority.length()<= 0)
+        if(wcopy_uri.length() <= 0)
         {
-            return false;
+            return ;
         }
-
-
-        auto it3 = regex_patterns_table.find(URI::scheme_regex_expresions::path);
-        const std::string path_rgx(it3->second);
+        map_result = regex_patterns_table.find(URI::scheme_regex_expresions::path);
+        const std::string path_rgx(map_result->second);
         m_path = extract_component(wcopy_uri,path_rgx);
-        if(m_path.length()<= 0)
-        {
-            return false;
+        if(m_path.length()>0){
+
+            
+            absolute_path = true;
         }
         if(wcopy_uri.length() <= 0)
         {
-            return false;
+            return;
         }
 
-            auto it4 = regex_patterns_table.find(URI::scheme_regex_expresions::query);
-            const std::string query_rgx(it4->second);
-            m_query = extract_component(wcopy_uri,query_rgx );
-            
-            if(wcopy_uri.length() > 0){
+        map_result = regex_patterns_table.find(URI::scheme_regex_expresions::query);
+        const std::string query_rgx(map_result->second);
+        m_query = extract_component(wcopy_uri, query_rgx);
 
-                 auto it5 = regex_patterns_table.find(URI::scheme_regex_expresions::fragments);
-                const std::string fragment_rgx(it5->second);
-                m_fragment = extract_component(wcopy_uri,fragment_rgx );
+        if(wcopy_uri.length() <= 0)
+        {
+            return;
+        }
 
-                if(wcopy_uri.length() > 0){ 
-                    
-                    //ne bi trebalo da posle fragmenta ostane nesto 
-                    return false; 
-                }
-            }
-            
+        map_result = regex_patterns_table.find(URI::scheme_regex_expresions::fragments);
+        const std::string fragment_rgx(map_result->second);
+        m_fragment = extract_component(wcopy_uri, fragment_rgx);
 
+        if(wcopy_uri.length() <= 0)
+        {
+            return;
+        }
         
-        return true;
-        
+
     }
     bool Parser::is_Relative_URI(std::string&relative_uri){
         
 
-        auto it = regex_patterns_table.find(URI::scheme_regex_expresions::autority);
-        const std::string authority_rgx(it->second);
+        auto map_result = regex_patterns_table.find(URI::scheme_regex_expresions::autority);
+        const std::string authority_rgx(map_result->second);
         m_authority = extract_component( relative_uri, authority_rgx );
 
         
 
-         it = regex_patterns_table.find(URI::scheme_regex_expresions::path);
-        const std::string path_rgx(it->second);
+         map_result = regex_patterns_table.find(URI::scheme_regex_expresions::path);
+        const std::string path_rgx(map_result->second);
         m_path = extract_component(relative_uri,path_rgx);
        
 
-         it = regex_patterns_table.find(URI::scheme_regex_expresions::query);
-        const std::string query_rgx(it->second);
+         map_result = regex_patterns_table.find(URI::scheme_regex_expresions::query);
+        const std::string query_rgx(map_result->second);
         m_query = extract_component(relative_uri,query_rgx );
 
-         it = regex_patterns_table.find(URI::scheme_regex_expresions::fragments);
-        const std::string fragment_rgx(it->second);
+         map_result = regex_patterns_table.find(URI::scheme_regex_expresions::fragments);
+        const std::string fragment_rgx(map_result->second);
         m_fragment = extract_component(relative_uri,fragment_rgx );
 
         if(m_authority.length()<= 0 && m_path.length() <= 0 ) 
@@ -143,10 +165,10 @@ namespace URI{
         });
         Scheme protocol_scheme;
         
-        auto it = table.find(protocol_name);
-        if (it != table.end())
+        auto map_result = table.find(protocol_name);
+        if (map_result != table.end())
         {
-            protocol_scheme = it->second; 
+            protocol_scheme = map_result->second; 
         }
         return protocol_scheme;
     }

@@ -53,9 +53,10 @@ namespace URI
         Parser& operator=(Parser &&) = delete;
         
         bool psrse_uri(const std::string& uri);
-        bool parse(const std::string& uri,std::string& protocol_name);
+        void parse(const std::string& uri,std::string& protocol_name);
 
-        bool is_Absolute_URI(std::string& uri);
+        std::string extract_scheme(const std::string& uri);
+
         bool is_Relative_URI(std::string& relative_uri);
         Scheme protocolNormalization(std::string& protocol_name);
         void define_regex_maping(Scheme&protocol);
@@ -72,10 +73,10 @@ namespace URI
         std::string m_path;
         std::string m_query;
         std::string m_fragment;
-        std::map< scheme_regex_expresions,const std::string> regex_patterns_table;
-        bool isabsolute_URI = false; // this is one of four types of HTTP-Request URI
+        std::map<scheme_regex_expresions,const std::string> regex_patterns_table;
+        bool absolute_URI = false; // this is one of four types of HTTP-Request URI
         bool has_net_path = false;   // authority + abs_path 
-        bool has_absolute_path=false; // this is one of four types of HTTP-Request URI
+        bool absolute_path=false; // this is one of four types of HTTP-Request URI
         bool has_relative_path = false;
         bool has_empty_path = false;
     };

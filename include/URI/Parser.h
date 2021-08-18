@@ -46,9 +46,29 @@ namespace URI
         /**
          * @brief Extracting the authority from the uri if it exists, otherwise returns an empty string
          */
+        std::string extract_host(const std::string& authority);
+        /**
+         * @brief Extracting the host from authority 
+         */
+        std::string extract_port(const std::string& authority);
+        /**
+         * @brief Extracting the port from the authority if it exists, otherwise returns an empty string
+         */
+        std::string extract_userinfo(const std::string& authority);
+        /**
+         * @brief Extracting the user info from the uri if it exists, otherwise returns an empty string
+         */
+        bool parse_authority(const std::string& authority);
+        /**
+         * @brief  
+         */
     
     private:
-    
+        std::string m_scheme;
+        std::string m_authority;
+        std::string m_userinfo;
+        std::string m_host;
+        std::string m_port;
     };
     
 

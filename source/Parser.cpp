@@ -49,5 +49,70 @@ namespace URI{
         }
        
     }
-    
+    bool Parser::parse_authority(const std::string& authority){
+        m_userinfo = extract_userinfo(authority);
+        m_host = extract_host(authority);
+        m_port = extract_port(authority);
+        if(m_host!="")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+           
+    }
+    std::string Parser::extract_port(const std::string& authority){ 
+        const std::regex port_rgx("[A-Za-z0-9+.:]@[A-Za-z0-9+-.]*:([0-9+]*)"); 
+        
+        std::smatch match;
+       
+        if(std::regex_search(authority.begin(),authority.end(), match, port_rgx))
+        {
+            return match[1];
+        }
+        else
+        {
+            return "";
+        }
+       
+    }
+    std::string Parser::extract_userinfo(const std::string& authority){ 
+        const std::regex port_rgx("([A-Za-z0-9+-.\\]]*)@"); 
+        
+        std::smatch match;
+       
+        if(std::regex_search(authority.begin(),authority.end(), match, port_rgx))
+        {
+            return match[1];
+        }
+        else
+        {
+            return "";
+        }
+       
+    }
+    std::string Parser::extract_host(const std::string& authority){ 
+        std::regex port_rgx("([\\[A-Za-z0-9+-.\\]]*)"); 
+        std::size_t found = authority.find("@");
+        if (found != std::string::npos)
+        {   
+            port_rgx = std::regex("[A-Za-z0-9+.:]@([\\[A-Za-z0-9+-.\\]]*)"); 
+        }
+        
+        std::smatch match;
+       
+        if(std::regex_search(authority.begin(),authority.end(), match, port_rgx))
+        {
+            return match[1];
+        }
+        else
+        {
+            return "";
+        }
+       
+    }
+   
+
 }//namespace Namespace

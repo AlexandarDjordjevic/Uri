@@ -88,6 +88,9 @@ namespace URI
          * 
          * @param uri 
          */
+
+        std::string extract_path(const std::string& path);
+
         void from_string(const std::string& uri);
 
         //std::string serialize(const std::string& scheme, const std::string& autority, const std::string& path, const std::string& query, const std::string& fragment);

@@ -73,7 +73,9 @@ namespace URI{
         std::smatch match;
         if (std::regex_search(uri.begin(), uri.end(), match, authority_rgx))
         {
-            m_authority = match[1];
+
+           m_autority=match[1];
+        
         }
         return m_authority;
     }
@@ -125,8 +127,35 @@ namespace URI{
     }
     
     void Uri::from_string(const std::string& uri){
+
         extract_scheme(uri);
+
     }
+    // std::string Uri::extract_path(const std::string& path){
+    //      std::smatch match;
+    //      std::regex path_rgx("^(\\/|:)[a-zA-Z][a-z0-9+.-](#|\\?|)*");
+
+    //      if(m_autority == ""){
+            
+    //         if (std::regex_search(path.begin(), path.end(), match, path_rgx))
+    //         {
+    //             m_path=match[1];
+    //         }
+    //         else
+    //         {
+    //             m_path="";
+    //         }
+
+    //     }
+    //     else{
+    //         if (std::regex_search(path.begin(), path.end(), match, path_rgx))
+    //         {
+    //             m_path=match[1];
+    //         }
+            
+    //     }
+       
+    // }
     
 
 }//namespace Namespace

@@ -80,12 +80,23 @@ TEST(URI_test, extract_authority_git){
     uri.from_string(test_string);
     ASSERT_EQ("github.com",uri.get_authority()); 
 };
-TEST(URI_test, extract_authority_urn){
+TEST(URI_test, extract_authority_ipv6_1){
     URI::Uri uri;
-    const std::string test_string = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
+    const std::string test_string = "ldap://[2001:db8::7]/c=GB?objectClass?one";
     uri.from_string(test_string);
-    ASSERT_EQ("oasis",uri.get_authority());  
+    ASSERT_EQ("[2001:db8::7]",uri.get_authority());  
 };
-
-
-
+TEST(URI_test, extract_authority_ipv6_2){
+    URI::Uri uri;
+    const std::string test_string = "ldap://[2001:db8::7]";
+    uri.from_string(test_string);
+    ASSERT_EQ("[2001:db8::7]",uri.get_authority());  
+    
+};
+TEST(URI_test, extract_authority_ipv6_3){
+    URI::Uri uri;
+    const std::string test_string = "ldap://[2001:db8::7]";
+    uri.from_string(test_string);
+    ASSERT_NE("[2001:db8::7",uri.get_authority());  
+    
+};

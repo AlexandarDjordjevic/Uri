@@ -59,12 +59,12 @@ namespace URI
          * @brief Extracting the port from the authority if it exists, otherwise returns an empty string
          */
         std::string extract_userinfo(const std::string& authority);
-        /**
-         * @brief Extracting the user info from the uri if it exists, otherwise returns an empty string
-         */
 
         std::string extract_path(const std::string& path);
 
+        /**
+         * @brief Extracting the user info from the uri if it exists, otherwise returns an empty string
+         */
         void from_string(const std::string& uri);
 
         //std::string serialize(const std::string& scheme, const std::string& autority, const std::string& path, const std::string& query, const std::string& fragment);

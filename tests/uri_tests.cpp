@@ -68,10 +68,24 @@ TEST(URI_test, extract_scheme_http){
     uri.from_string(test_string);
     ASSERT_EQ("http",uri.get_scheme()); 
 };
-// TEST(URI_test, extract_host_google){
-//     URI::Uri uri;
-//     const std::string test_string = "http://wwww.google.com/user/project-name.git";
-//     uri.from_string(test_string);
-//     ASSERT_EQ("wwww.google.com",uri.get_scheme()); 
-// };
+TEST(URI_test, extract_authority_google){
+    URI::Uri uri;
+    const std::string test_string = "http://wwww.google.com/user/project-name.git";
+    uri.from_string(test_string);
+    ASSERT_EQ("wwww.google.com",uri.get_authority()); 
+};
+TEST(URI_test, extract_authority_git){
+    URI::Uri uri;
+    const std::string test_string = "git://github.com/user/project-name.git";
+    uri.from_string(test_string);
+    ASSERT_EQ("github.com",uri.get_authority()); 
+};
+TEST(URI_test, extract_authority_urn){
+    URI::Uri uri;
+    const std::string test_string = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
+    uri.from_string(test_string);
+    ASSERT_EQ("oasis",uri.get_authority());  
+};
+
+
 

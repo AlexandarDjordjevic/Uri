@@ -30,35 +30,68 @@ namespace URI
         Uri& operator=(const Uri&) = delete;
         Uri(Uri&&) = delete;
         Uri& operator=(Uri &&) = delete;
+        
         std::string get_scheme();
         std::string get_authority();
         std::string get_path();
         std::string get_query();
         std::string get_fragments();
 
-        void set_scheme();
-        void set_authority();
-        void set_path();
-        void set_query();
-        void set_fragments();
+        void set_scheme(const std::string &scheme);
+        void set_authority(const std::string &authority);
+        void set_path(const std::string &path);
+        void set_query(const std::string &query);
+        void set_fragments(const std::string &fragments);
 
-        std::string extract_scheme(const std::string& uri);
         /**
-         * @brief Extracting the scheme from the uri if it exists, otherwise returns an empty string
+         * @brief Extracting the scheme from the uri 
+         * 
+         * @param uri 
+         * @return std::string 
+         */
+        std::string extract_scheme(const std::string& uri);
+
+        /**
+         * @brief Extracting the authority from the uri 
+         * 
+         * @param uri 
+         * @return std::string 
          */
         std::string extract_authority(const std::string& uri);
+        
         /**
-         * @brief Extracting the authority from the uri if it exists, otherwise returns an empty string
+         * @brief Extracting the host from authority
+         * 
+         * @param authority 
+         * @return std::string 
          */
-        std::string extract_host(const std::string& authority);
+        std::string extract_host();
+
         /**
-         * @brief Extracting the host from authority 
+         * @brief Extracting the port from the authority 
+         * 
+         * @param authority 
+         * @return std::string 
          */
-        std::string extract_port(const std::string& authority);
+        std::string extract_port();
+        
         /**
-         * @brief Extracting the port from the authority if it exists, otherwise returns an empty string
+         * @brief Extracting the user info from the authority
+         * 
+         * @param authority 
+         * @return std::string 
          */
+<<<<<<< HEAD
         std::string extract_userinfo(const std::string& authority);
+=======
+        std::string extract_userinfo();
+        
+        /**
+         * @brief Extracting all components from uri
+         * 
+         * @param uri 
+         */
+>>>>>>> ce11ddb3b05397fd58eab1d0e2ce4254fd7f3675
 
         std::string extract_path(const std::string& path);
 
@@ -73,7 +106,10 @@ namespace URI
 
     private:
         std::string m_scheme;
-        std::string m_autority;
+        std::string m_authority;
+        std::string m_port;
+        std::string m_host;
+        std::string m_userinfo;
         std::string m_path;
         std::string m_query;
         std::string m_fragments;

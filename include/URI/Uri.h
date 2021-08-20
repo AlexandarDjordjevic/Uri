@@ -81,24 +81,13 @@ namespace URI
          * @param authority 
          * @return std::string 
          */
+
         std::string extract_userinfo();
-        
-       
+
         /**
-         * @brief Extracting all components from uri
-         * 
-         * @param uri 
+         * @brief Extracting the user info from the uri if it exists, otherwise returns an empty string
          */
         void from_string(const std::string& uri);
-
-        /**
-         * @brief future features
-         * std::string extract_path(const std::string& uri);
-         * std::string serialize(const std::string& scheme, const std::string& autority, const std::string& path, const std::string& query, const std::string& fragment);
-         * 
-         */
-
-
 
     private:
         std::string m_scheme;

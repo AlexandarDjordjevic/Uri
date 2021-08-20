@@ -56,26 +56,26 @@ namespace URI{
         m_fragments = fragments;
     }
 
-    std::string Uri::extract_scheme(const std::string &uri)
+    void Uri::parse_scheme(const std::string &uri)
     {
-        const std::regex scheme_rgx("^([a-zA-Z][a-z0-9+.-]*):");
         std::smatch match;
-        if (std::regex_search(uri.begin(), uri.end(), match, scheme_rgx))
+
+        if (std::regex_search(uri.begin(), uri.end(), match, std::regex("^[a-zA-Z]*[^:]")))
         {
-            m_scheme = match[1];  
+            m_scheme = *match.begin();
         }
-        return m_scheme;
     }
 
-    std::string Uri::extract_authority(const std::string &uri)
+    void Uri::parse_authority(const std::string &uri)
     {
-        const std::regex authority_rgx("//([\\[A-Za-z0-9@.:\\]]*)");
         std::smatch match;
-        if (std::regex_search(uri.begin(), uri.end(), match, authority_rgx))
+        const std::string authority_start{"//"};
+
+        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:.]*\]?)[^\/\?#])")))
         {
-           m_authority=match[1];
+            std::string result{*match.begin()};
+            m_authority = result.substr(authority_start.length(), result.length());
         }
-        return m_authority;
     }
 
     std::string Uri::extract_port()
@@ -120,8 +120,8 @@ namespace URI{
     }
     
     void Uri::from_string(const std::string& uri){
-        extract_scheme(uri);
-        extract_authority(uri);
+        parse_scheme(uri);
+        parse_authority(uri);
         extract_userinfo();
         extract_host();
         extract_port();

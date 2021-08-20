@@ -1,5 +1,5 @@
 /**
- * @author your name (you@domain.com)
+ * @author Andejla14 & krrle
  * @brief 
  * @version 0.1
  * @date 2021-08-18
@@ -14,6 +14,7 @@ namespace URI
 {
     class Uri{
     public:
+
         /**
          * @brief Default constructor
          * 
@@ -43,53 +44,50 @@ namespace URI
         void set_query(const std::string &query);
         void set_fragments(const std::string &fragments);
 
+        
+
+        /**
+         * @brief Extracting components from the uri
+         */
+        void from_string(const std::string& uri);
+
+    private:
+    
         /**
          * @brief Extracting the scheme from the uri 
          * 
-         * @param uri 
-         * @return std::string 
+         * @param uri
          */
-        std::string extract_scheme(const std::string& uri);
+        void parse_scheme(const std::string& uri);
 
         /**
          * @brief Extracting the authority from the uri 
          * 
          * @param uri 
-         * @return std::string 
          */
-        std::string extract_authority(const std::string& uri);
+        void parse_authority(const std::string& uri);
         
         /**
-         * @brief Extracting the host from authority
+         * @brief Extracting host from the authority
          * 
-         * @param authority 
          * @return std::string 
          */
         std::string extract_host();
 
         /**
-         * @brief Extracting the port from the authority 
+         * @brief Extracting port from the authority 
          * 
-         * @param authority 
          * @return std::string 
          */
         std::string extract_port();
         
         /**
-         * @brief Extracting the user info from the authority
+         * @brief Extracting user's info from the authority
          * 
-         * @param authority 
          * @return std::string 
          */
-
         std::string extract_userinfo();
 
-        /**
-         * @brief Extracting the user info from the uri if it exists, otherwise returns an empty string
-         */
-        void from_string(const std::string& uri);
-
-    private:
         std::string m_scheme;
         std::string m_authority;
         std::string m_port;
@@ -100,4 +98,4 @@ namespace URI
         std::string m_fragments;
     };
 
-} // namespace Namespace
+} // namespace URI

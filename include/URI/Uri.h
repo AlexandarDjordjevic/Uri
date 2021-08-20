@@ -44,8 +44,6 @@ namespace URI
         void set_query(const std::string &query);
         void set_fragments(const std::string &fragments);
 
-        
-
         /**
          * @brief Extracting components from the uri
          */

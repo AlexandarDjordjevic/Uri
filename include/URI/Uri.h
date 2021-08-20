@@ -81,6 +81,9 @@ namespace URI
          * @param authority 
          * @return std::string 
          */
+<<<<<<< HEAD
+        std::string extract_userinfo(const std::string& authority);
+=======
         std::string extract_userinfo();
         
         /**
@@ -88,9 +91,13 @@ namespace URI
          * 
          * @param uri 
          */
+>>>>>>> ce11ddb3b05397fd58eab1d0e2ce4254fd7f3675
 
         std::string extract_path(const std::string& path);
 
+        /**
+         * @brief Extracting the user info from the uri if it exists, otherwise returns an empty string
+         */
         void from_string(const std::string& uri);
 
         //std::string serialize(const std::string& scheme, const std::string& autority, const std::string& path, const std::string& query, const std::string& fragment);

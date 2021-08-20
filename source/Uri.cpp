@@ -12,7 +12,7 @@ namespace URI{
     {
 
     }
-    
+
     std::string Uri::get_scheme(){
         return m_scheme;
     }
@@ -73,9 +73,7 @@ namespace URI{
         std::smatch match;
         if (std::regex_search(uri.begin(), uri.end(), match, authority_rgx))
         {
-
-           m_autority=match[1];
-        
+           m_authority=match[1];
         }
         return m_authority;
     }
@@ -83,7 +81,6 @@ namespace URI{
     std::string Uri::extract_port()
     {
         const std::regex port_rgx("[A-Za-z0-9+.:@\\[\\]]*:([0-9+]*)");
-
         std::smatch match;
         const std::string auth_wc = m_authority;
         if (std::regex_search(auth_wc.begin(), auth_wc.end(), match, port_rgx))
@@ -96,10 +93,8 @@ namespace URI{
     std::string Uri::extract_userinfo()
     {
         const std::regex port_rgx("([A-Za-z0-9+-.\\]]*)@");
-
         std::smatch match;
         const std::string auth_wc = m_authority;
-
         if (std::regex_search(auth_wc.begin(), auth_wc.end(), match, port_rgx))
         {
              m_userinfo = match[1];
@@ -113,8 +108,6 @@ namespace URI{
         std::size_t found = m_authority.find("@");
         if (found != std::string::npos)
         {       
-            //match[0] is meched chars from first to last in regex 
-            //other indexes are wholes separated in parentheses 
             port_rgx = std::regex("[A-Za-z0-9+.:]@([\\[A-Za-z0-9+-.\\]]*)"); 
         }
         std::smatch match;
@@ -127,35 +120,11 @@ namespace URI{
     }
     
     void Uri::from_string(const std::string& uri){
-
         extract_scheme(uri);
+        extract_authority(uri);
+        extract_userinfo();
+        extract_host();
+        extract_port();
+    }   
 
-    }
-    // std::string Uri::extract_path(const std::string& path){
-    //      std::smatch match;
-    //      std::regex path_rgx("^(\\/|:)[a-zA-Z][a-z0-9+.-](#|\\?|)*");
-
-    //      if(m_autority == ""){
-            
-    //         if (std::regex_search(path.begin(), path.end(), match, path_rgx))
-    //         {
-    //             m_path=match[1];
-    //         }
-    //         else
-    //         {
-    //             m_path="";
-    //         }
-
-    //     }
-    //     else{
-    //         if (std::regex_search(path.begin(), path.end(), match, path_rgx))
-    //         {
-    //             m_path=match[1];
-    //         }
-            
-    //     }
-       
-    // }
-    
-
-}//namespace Namespace
+}//namespace URI

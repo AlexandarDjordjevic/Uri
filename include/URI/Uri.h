@@ -30,7 +30,7 @@ namespace URI
         Uri& operator=(const Uri&) = delete;
         Uri(Uri&&) = delete;
         Uri& operator=(Uri &&) = delete;
-        
+
         std::string get_scheme();
         std::string get_authority();
         std::string get_path();
@@ -83,17 +83,20 @@ namespace URI
          */
         std::string extract_userinfo();
         
+       
         /**
          * @brief Extracting all components from uri
          * 
          * @param uri 
          */
-
-        std::string extract_path(const std::string& path);
-
         void from_string(const std::string& uri);
 
-        //std::string serialize(const std::string& scheme, const std::string& autority, const std::string& path, const std::string& query, const std::string& fragment);
+        /**
+         * @brief future features
+         * std::string extract_path(const std::string& uri);
+         * std::string serialize(const std::string& scheme, const std::string& autority, const std::string& path, const std::string& query, const std::string& fragment);
+         * 
+         */
 
 
 

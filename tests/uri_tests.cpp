@@ -106,24 +106,44 @@ TEST(URI_test, parse_authority_ipv6_without_path){
     ASSERT_EQ("[2001:db8::7]", uri.get_authority());  
 };
 
-TEST(URI_test, parse_host){
+TEST(URI_test, parse_host_ipv6){
     URI::Uri uri;
-    const std::string test_authority = "[5655:43:4343:76dd:::]:8080";
-    uri.parse_host(test_authority);
+    const std::string test_authority = "http://[5655:43:4343:76dd:::]:8080";
+    uri.from_string(test_authority);
     ASSERT_EQ("[5655:43:4343:76dd:::]", uri.get_host());  
 };
 
-TEST(URI_test, parse_host1){
+TEST(URI_test, parse_host_ipv4){
     URI::Uri uri;
-    const std::string test_authority = "127.0.0.1:8080";
-    uri.parse_host(test_authority);
+    const std::string test_authority = "http://127.0.0.1:8080";
+    uri.from_string(test_authority);
     ASSERT_EQ("127.0.0.1", uri.get_host());  
 };
 
-
-TEST(URI_test, parse_host2){
+TEST(URI_test, parse_host_when_userinfo_ispresent){
     URI::Uri uri;
-    const std::string test_authority = "google.csds.com:8080";
-    uri.parse_host(test_authority);
+    const std::string test_authority = "http://csdv@google.csds.com:8080";
+    uri.from_string(test_authority);
     ASSERT_EQ("google.csds.com", uri.get_host());  
+};
+
+TEST(URI_test, parse_host_without_userinfo){
+    URI::Uri uri;
+    const std::string test_authority = "http://google.csds.com:8080";
+    uri.from_string(test_authority);
+    ASSERT_EQ("google.csds.com", uri.get_host());  
+};
+
+TEST(URI_test, parse_host_without_port){
+    URI::Uri uri;
+    const std::string test_authority = "http://csdv@google.csds.com";
+    uri.from_string(test_authority);
+    ASSERT_EQ("google.csds.com", uri.get_host());  
+};
+
+TEST(URI_test, parse_host_without_port_ipv6){
+    URI::Uri uri;
+    const std::string test_authority = "http://[5655:43:4343:76dd:::]";
+    uri.from_string(test_authority);
+    ASSERT_EQ("[5655:43:4343:76dd:::]", uri.get_host());  
 };

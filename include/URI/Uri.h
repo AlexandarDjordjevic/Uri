@@ -51,13 +51,15 @@ namespace URI
          * @brief Extracting components from the uri
          */
         void from_string(const std::string& uri);
+
+    private:
         /**
          * @brief Extracting user's info from the authority
          * 
          * @param authority
          */
         void parse_userinfo(const std::string &authority);
-        
+
         /**
          * @brief Extracting host from the authority
          * 
@@ -65,8 +67,6 @@ namespace URI
          */
         void parse_host(const std::string &authority);
 
-    private:
-    
         /**
          * @brief Extracting the scheme from the uri 
          * 
@@ -80,8 +80,6 @@ namespace URI
          * @param uri 
          */
         void parse_authority(const std::string& uri);
-        
-        
 
         /**
          * @brief Extracting port from the authority 
@@ -89,7 +87,6 @@ namespace URI
          * @param authority
          */
         void parse_port(const std::string &authority);
-        
 
     private:
         std::string m_scheme;

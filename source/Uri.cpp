@@ -80,7 +80,7 @@ namespace URI{
         std::smatch match;
         const std::string authority_start{"//"};
 
-        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:.]*\]?)[^\/\?#])")))
+        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:.@]*\]?)[^\/\?#])")))
         {
             std::string result{*match.begin()};
             m_authority = result.substr(authority_start.length(), result.length());
@@ -103,26 +103,34 @@ namespace URI{
     {
         std::smatch match;
 
-        if (std::regex_search(authority.begin(), authority.end(), match, std::regex(R"([A-Za-z0-9+-.:]*)@)")))
+        if (std::regex_search(authority.begin(), authority.end(), match, std::regex(R"(([A-Za-z0-9+-.:]*)@)")))
         {
             m_port = *match.begin();
         }
     }
 
-    void Uri::parse_host(const std::string &authority)  //((([\[([0-9a-fA-F]{0,4}:){7}[0-9a-fA-F]{0,4}\])|(([0-9]{1,3}.){3}[0-9]{1,3})|([\w+.]*)) 
+    void Uri::parse_host(const std::string &authority)
     {
-        std::smatch match;
 
-        if (std::regex_search(authority.begin(), authority.end(), match, std::regex(R"((\[([([0-9a-fA-F]{0,4}:){0,7}[0-9a-fA-F]{0,4}\])|(([0-9]{0,3}.){3}([0-9]{0,3}){1})|([a-zA-Z*.]*))")))
+        std::smatch match;
+        std::string authority_part = authority;
+        std::size_t pos = authority.find("@");
+        if (pos != -1)
+        {
+            authority_part = authority.substr(pos + 1);
+        }
+        if (std::regex_search(authority_part.cbegin(), authority_part.cend(), match, std::regex(R"((^[a-zA-Z][a-zA-Z+.]*)|(\[([([0-9a-fA-F]{0,4}:){0,7}[0-9a-fA-F]{0,4}\])|(([0-9]{0,3}.){3}([0-9]{0,3}){1}))")))
         {
             m_host = *match.begin();
         }
     }
-    
+
     void Uri::from_string(const std::string& uri){
         parse_scheme(uri);
         parse_authority(uri);
-       
-    }   
-
+        parse_userinfo(m_authority);
+        parse_host(m_authority);
+        parse_port(m_authority);
+    }  
+    
 }//namespace URI

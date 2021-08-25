@@ -34,6 +34,9 @@ namespace URI
 
         std::string get_scheme();
         std::string get_authority();
+        std::string get_port();
+        std::string get_host();
+        std::string get_userinfo();
         std::string get_path();
         std::string get_query();
         std::string get_fragments();
@@ -48,6 +51,19 @@ namespace URI
          * @brief Extracting components from the uri
          */
         void from_string(const std::string& uri);
+        /**
+         * @brief Extracting user's info from the authority
+         * 
+         * @param authority
+         */
+        void parse_userinfo(const std::string &authority);
+        
+        /**
+         * @brief Extracting host from the authority
+         * 
+         * @param authority
+         */
+        void parse_host(const std::string &authority);
 
     private:
     
@@ -65,27 +81,17 @@ namespace URI
          */
         void parse_authority(const std::string& uri);
         
-        /**
-         * @brief Extracting host from the authority
-         * 
-         * @return std::string 
-         */
-        std::string extract_host();
+        
 
         /**
          * @brief Extracting port from the authority 
          * 
-         * @return std::string 
+         * @param authority
          */
-        std::string extract_port();
+        void parse_port(const std::string &authority);
         
-        /**
-         * @brief Extracting user's info from the authority
-         * 
-         * @return std::string 
-         */
-        std::string extract_userinfo();
 
+    private:
         std::string m_scheme;
         std::string m_authority;
         std::string m_port;

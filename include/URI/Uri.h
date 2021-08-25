@@ -1,5 +1,5 @@
 /**
- * @author your name (you@domain.com)
+ * @author Andejla14 & krrle
  * @brief 
  * @version 0.1
  * @date 2021-08-18
@@ -14,6 +14,7 @@ namespace URI
 {
     class Uri{
     public:
+
         /**
          * @brief Default constructor
          * 
@@ -30,9 +31,12 @@ namespace URI
         Uri& operator=(const Uri&) = delete;
         Uri(Uri&&) = delete;
         Uri& operator=(Uri &&) = delete;
-        
+
         std::string get_scheme();
         std::string get_authority();
+        std::string get_port();
+        std::string get_host();
+        std::string get_userinfo();
         std::string get_path();
         std::string get_query();
         std::string get_fragments();
@@ -44,65 +48,48 @@ namespace URI
         void set_fragments(const std::string &fragments);
 
         /**
+         * @brief Extracting components from the uri
+         */
+        void from_string(const std::string& uri);
+        /**
+         * @brief Extracting user's info from the authority
+         * 
+         * @param authority
+         */
+        void parse_userinfo(const std::string &authority);
+        
+        /**
+         * @brief Extracting host from the authority
+         * 
+         * @param authority
+         */
+        void parse_host(const std::string &authority);
+
+    private:
+    
+        /**
          * @brief Extracting the scheme from the uri 
          * 
-         * @param uri 
-         * @return std::string 
+         * @param uri
          */
-        std::string extract_scheme(const std::string& uri);
+        void parse_scheme(const std::string& uri);
 
         /**
          * @brief Extracting the authority from the uri 
          * 
          * @param uri 
-         * @return std::string 
          */
-        std::string extract_authority(const std::string& uri);
+        void parse_authority(const std::string& uri);
         
-        /**
-         * @brief Extracting the host from authority
-         * 
-         * @param authority 
-         * @return std::string 
-         */
-        std::string extract_host();
-
-        /**
-         * @brief Extracting the port from the authority 
-         * 
-         * @param authority 
-         * @return std::string 
-         */
-        std::string extract_port();
         
+
         /**
-         * @brief Extracting the user info from the authority
+         * @brief Extracting port from the authority 
          * 
-         * @param authority 
-         * @return std::string 
+         * @param authority
          */
-<<<<<<< HEAD
-        std::string extract_userinfo(const std::string& authority);
-=======
-        std::string extract_userinfo();
+        void parse_port(const std::string &authority);
         
-        /**
-         * @brief Extracting all components from uri
-         * 
-         * @param uri 
-         */
->>>>>>> ce11ddb3b05397fd58eab1d0e2ce4254fd7f3675
-
-        std::string extract_path(const std::string& path);
-
-        /**
-         * @brief Extracting the user info from the uri if it exists, otherwise returns an empty string
-         */
-        void from_string(const std::string& uri);
-
-        //std::string serialize(const std::string& scheme, const std::string& autority, const std::string& path, const std::string& query, const std::string& fragment);
-
-
 
     private:
         std::string m_scheme;
@@ -115,4 +102,4 @@ namespace URI
         std::string m_fragments;
     };
 
-} // namespace Namespace
+} // namespace URI

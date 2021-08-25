@@ -1,102 +1,129 @@
 #include <gtest/gtest.h>
 #include <URI/Uri.h>
 
-TEST(URI_test, extract_scheme_https){
+TEST(URI_test, parse_scheme_https){
     URI::Uri uri;
-    const std::string test_string = "https://www.google.com/jfejs/cdscs/cdcs/?csdsdc#cdsmc";
-    uri.from_string(test_string);
-    ASSERT_EQ("https",uri.get_scheme()); 
+    const std::string test_uri = "https://www.google.com/jfejs/cdscs/cdcs/?csdsdc#cdsmc";
+    uri.from_string(test_uri);
+    ASSERT_EQ("https", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_Https){
+
+TEST(URI_test, parse_scheme_Https){
     URI::Uri uri;
-    std::string k= uri.extract_scheme("Https://www.google.com/jfejs/cdscs/cdcs/?csdsdc#cdsmc");
-    const std::string test_string = "Https://www.google.com/jfejs/cdscs/cdcs/?csdsdc#cdsmc";
-    // uri.from_string(test_string);
-    ASSERT_EQ("Https",k); 
+    const std::string test_uri = "Https://www.google.com/jfejs/cdscs/cdcs/?csdsdc#cdsmc";
+    uri.from_string(test_uri);
+    ASSERT_EQ("Https", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_ftp){
+
+TEST(URI_test, parse_scheme_ftp){
     URI::Uri uri;
-    const std::string test_string = "ftp://ftp.is.co.za/rfc/rfc1808.txt";
-    uri.from_string(test_string);
-    ASSERT_EQ("ftp",uri.get_scheme()); 
+    const std::string test_uri = "ftp://ftp.is.co.za/rfc/rfc1808.txt";
+    uri.from_string(test_uri);
+    ASSERT_EQ("ftp", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_ldap){
+
+TEST(URI_test, parse_scheme_ldap){
     URI::Uri uri;
-    const std::string test_string = "ldap://[2001:db8::7]/c=GB?objectClass?one";
-    uri.from_string(test_string);
-    ASSERT_EQ("ldap",uri.get_scheme()); 
+    const std::string test_uri = "ldap://[2001:db8::7]/c=GB?objectClass?one";
+    uri.from_string(test_uri);
+    ASSERT_EQ("ldap", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_mailto){
+
+TEST(URI_test, parse_scheme_mailto){
     URI::Uri uri;
-    const std::string test_string = "mailto:John.Doe@example.com";
-    uri.from_string(test_string);
-    ASSERT_EQ("mailto",uri.get_scheme()); 
+    const std::string test_uri = "mailto:John.Doe@example.com";
+    uri.from_string(test_uri);
+    ASSERT_EQ("mailto", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_news){
+
+TEST(URI_test, parse_scheme_news){
     URI::Uri uri;
-    const std::string test_string = "news:comp.infosystems.www.servers.unix";
-    uri.from_string(test_string);
-    ASSERT_EQ("news",uri.get_scheme()); 
+    const std::string test_uri = "news:comp.infosystems.www.servers.unix";
+    uri.from_string(test_uri);
+    ASSERT_EQ("news", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_tel){
+
+TEST(URI_test, parse_scheme_tel){
     URI::Uri uri;
-    const std::string test_string = "tel:+1-816-555-1212";
-    uri.from_string(test_string);
-    ASSERT_EQ("tel",uri.get_scheme()); 
+    const std::string test_uri = "tel:+1-816-555-1212";
+    uri.from_string(test_uri);
+    ASSERT_EQ("tel", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_telnet){
+
+TEST(URI_test, parse_scheme_telnet){
     URI::Uri uri;
-    const std::string test_string = "telnet://192.0.2.16:80/";
-    uri.from_string(test_string);
-    ASSERT_EQ("telnet",uri.get_scheme()); 
+    const std::string test_uri = "telnet://192.0.2.16:80/";
+    uri.from_string(test_uri);
+    ASSERT_EQ("telnet", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_urn){
+
+TEST(URI_test, parse_scheme_urn){
     URI::Uri uri;
-    const std::string test_string = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
-    uri.from_string(test_string);
-    ASSERT_EQ("urn",uri.get_scheme()); 
+    const std::string test_uri = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
+    uri.from_string(test_uri);
+    ASSERT_EQ("urn", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_git){
+
+TEST(URI_test, parse_scheme_git){
     URI::Uri uri;
-    const std::string test_string = "git://github.com/user/project-name.git";
-    uri.from_string(test_string);
-    ASSERT_EQ("git",uri.get_scheme()); 
+    const std::string test_uri = "git://github.com/user/project-name.git";
+    uri.from_string(test_uri);
+    ASSERT_EQ("git", uri.get_scheme()); 
 };
-TEST(URI_test, extract_scheme_http){
+
+TEST(URI_test, parse_scheme_http){
     URI::Uri uri;
-    const std::string test_string = "http://wwww.google.com/user/project-name.git";
-    uri.from_string(test_string);
-    ASSERT_EQ("http",uri.get_scheme()); 
+    const std::string test_uri = "http://wwww.google.com/user/project-name.git";
+    uri.from_string(test_uri);
+    ASSERT_EQ("http", uri.get_scheme()); 
 };
-TEST(URI_test, extract_authority_google){
+
+TEST(URI_test, parse_authority_google){
     URI::Uri uri;
-    const std::string test_string = "http://wwww.google.com/user/project-name.git";
-    uri.from_string(test_string);
-    ASSERT_EQ("wwww.google.com",uri.get_authority()); 
+    const std::string test_uri = "http://wwww.google.com/user/project-name.git";
+    uri.from_string(test_uri);
+    ASSERT_EQ("wwww.google.com", uri.get_authority()); 
 };
-TEST(URI_test, extract_authority_git){
+
+TEST(URI_test, parse_authority_git){
     URI::Uri uri;
-    const std::string test_string = "git://github.com/user/project-name.git";
-    uri.from_string(test_string);
-    ASSERT_EQ("github.com",uri.get_authority()); 
+    const std::string test_uri = "git://github.com/user/project-name.git";
+    uri.from_string(test_uri);
+    ASSERT_EQ("github.com", uri.get_authority()); 
 };
-TEST(URI_test, extract_authority_ipv6_1){
+
+TEST(URI_test, parse_authority_ipv6_with_path){
     URI::Uri uri;
-    const std::string test_string = "ldap://[2001:db8::7]/c=GB?objectClass?one";
-    uri.from_string(test_string);
-    ASSERT_EQ("[2001:db8::7]",uri.get_authority());  
+    const std::string test_uri = "ldap://[2001:db8::7]/c=GB?objectClass?one";
+    uri.from_string(test_uri);
+    ASSERT_EQ("[2001:db8::7]", uri.get_authority());  
 };
-TEST(URI_test, extract_authority_ipv6_2){
+
+TEST(URI_test, parse_authority_ipv6_without_path){
     URI::Uri uri;
-    const std::string test_string = "ldap://[2001:db8::7]";
-    uri.from_string(test_string);
-    ASSERT_EQ("[2001:db8::7]",uri.get_authority());  
-    
+    const std::string test_uri = "ldap://[2001:db8::7]";
+    uri.from_string(test_uri);
+    ASSERT_EQ("[2001:db8::7]", uri.get_authority());  
 };
-TEST(URI_test, extract_authority_ipv6_3){
+
+TEST(URI_test, parse_host){
     URI::Uri uri;
-    const std::string test_string = "ldap://[2001:db8::7]";
-    uri.from_string(test_string);
-    ASSERT_NE("[2001:db8::7",uri.get_authority());  
-    
+    const std::string test_authority = "[5655:43:4343:76dd:::]:8080";
+    uri.parse_host(test_authority);
+    ASSERT_EQ("[5655:43:4343:76dd:::]", uri.get_host());  
+};
+
+TEST(URI_test, parse_host1){
+    URI::Uri uri;
+    const std::string test_authority = "127.0.0.1:8080";
+    uri.parse_host(test_authority);
+    ASSERT_EQ("127.0.0.1", uri.get_host());  
+};
+
+
+TEST(URI_test, parse_host2){
+    URI::Uri uri;
+    const std::string test_authority = "google.csds.com:8080";
+    uri.parse_host(test_authority);
+    ASSERT_EQ("google.csds.com", uri.get_host());  
 };

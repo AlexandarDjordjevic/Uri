@@ -12,7 +12,7 @@ namespace URI{
     {
 
     }
-    
+
     std::string Uri::get_scheme(){
         return m_scheme;
     }
@@ -21,6 +21,18 @@ namespace URI{
         return m_authority;
     }
     
+    std::string Uri::get_port(){
+        return m_port;
+    }
+
+    std::string Uri::get_host(){
+        return m_host;
+    }
+
+    std::string Uri::get_userinfo(){
+        return m_userinfo;
+    }
+
     std::string Uri::get_path(){
         return m_path;
     }
@@ -39,9 +51,6 @@ namespace URI{
 
     void Uri::set_authority(const std::string& authority){
         m_authority = authority;
-        extract_userinfo();
-        extract_host();
-        extract_port();
     }
 
     void Uri::set_path(const std::string& path){
@@ -56,106 +65,64 @@ namespace URI{
         m_fragments = fragments;
     }
 
-    std::string Uri::extract_scheme(const std::string &uri)
+    void Uri::parse_scheme(const std::string &uri)
     {
-        const std::regex scheme_rgx("^([a-zA-Z][a-z0-9+.-]*):");
         std::smatch match;
-        if (std::regex_search(uri.begin(), uri.end(), match, scheme_rgx))
+
+        if (std::regex_search(uri.begin(), uri.end(), match, std::regex("^[a-zA-Z]*[^:]")))
         {
-            m_scheme = match[1];  
+            m_scheme = *match.begin();
         }
-        return m_scheme;
     }
 
-    std::string Uri::extract_authority(const std::string &uri)
+    void Uri::parse_authority(const std::string &uri)
     {
-        const std::regex authority_rgx("//([\\[A-Za-z0-9@.:\\]]*)");
         std::smatch match;
-        if (std::regex_search(uri.begin(), uri.end(), match, authority_rgx))
-        {
+        const std::string authority_start{"//"};
 
-           m_autority=match[1];
-        
+        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:.]*\]?)[^\/\?#])")))
+        {
+            std::string result{*match.begin()};
+            m_authority = result.substr(authority_start.length(), result.length());
         }
-        return m_authority;
     }
 
-    std::string Uri::extract_port()
+    void Uri::parse_port(const std::string &authority)
     {
-        const std::regex port_rgx("[A-Za-z0-9+.:@\\[\\]]*:([0-9+]*)");
-
         std::smatch match;
-        const std::string auth_wc = m_authority;
-        if (std::regex_search(auth_wc.begin(), auth_wc.end(), match, port_rgx))
+        const std::string port_start{"_:"};
+
+        if (std::regex_search(authority.begin(), authority.end(), match, std::regex(R"(\]:([0-9]{0,4})[^\/?#]|[a-zA-Z]:([0-9]{0,4})[^\/?#])")))
         {
-             m_port = match[1];
+            std::string result{*match.begin()};
+            m_port = result.substr(port_start.length(), result.length());
         }
-        return m_port;
     }
 
-    std::string Uri::extract_userinfo()
+    void Uri::parse_userinfo(const std::string &authority)
     {
-        const std::regex port_rgx("([A-Za-z0-9+-.\\]]*)@");
-
         std::smatch match;
-        const std::string auth_wc = m_authority;
 
-        if (std::regex_search(auth_wc.begin(), auth_wc.end(), match, port_rgx))
+        if (std::regex_search(authority.begin(), authority.end(), match, std::regex(R"([A-Za-z0-9+-.:]*)@)")))
         {
-             m_userinfo = match[1];
+            m_port = *match.begin();
         }
-        return m_userinfo;
     }
 
-    std::string Uri::extract_host()
+    void Uri::parse_host(const std::string &authority)  //((([\[([0-9a-fA-F]{0,4}:){7}[0-9a-fA-F]{0,4}\])|(([0-9]{1,3}.){3}[0-9]{1,3})|([\w+.]*)) 
     {
-        std::regex port_rgx("(\\[([0-9a-fA-F]{0,4}:){7}[0-9a-fA-F]{0,4}\\]|([0-9]{1,3}.){3}[0-9]{1,3}|[A-Za-z0-9+.]*):"); 
-        std::size_t found = m_authority.find("@");
-        if (found != std::string::npos)
-        {       
-            //match[0] is meched chars from first to last in regex 
-            //other indexes are wholes separated in parentheses 
-            port_rgx = std::regex("[A-Za-z0-9+.:]@([\\[A-Za-z0-9+-.\\]]*)"); 
-        }
         std::smatch match;
-        const std::string auth_wc = m_authority;
-        if (std::regex_search(auth_wc.begin(), auth_wc.end(), match, port_rgx))
+
+        if (std::regex_search(authority.begin(), authority.end(), match, std::regex(R"((\[([([0-9a-fA-F]{0,4}:){0,7}[0-9a-fA-F]{0,4}\])|(([0-9]{0,3}.){3}([0-9]{0,3}){1})|([a-zA-Z*.]*))")))
         {
-             m_host = match[1];
+            m_host = *match.begin();
         }
-        return m_host;
     }
     
     void Uri::from_string(const std::string& uri){
-
-        extract_scheme(uri);
-
-    }
-    // std::string Uri::extract_path(const std::string& path){
-    //      std::smatch match;
-    //      std::regex path_rgx("^(\\/|:)[a-zA-Z][a-z0-9+.-](#|\\?|)*");
-
-    //      if(m_autority == ""){
-            
-    //         if (std::regex_search(path.begin(), path.end(), match, path_rgx))
-    //         {
-    //             m_path=match[1];
-    //         }
-    //         else
-    //         {
-    //             m_path="";
-    //         }
-
-    //     }
-    //     else{
-    //         if (std::regex_search(path.begin(), path.end(), match, path_rgx))
-    //         {
-    //             m_path=match[1];
-    //         }
-            
-    //     }
+        parse_scheme(uri);
+        parse_authority(uri);
        
-    // }
-    
+    }   
 
-}//namespace Namespace
+}//namespace URI

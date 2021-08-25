@@ -111,15 +111,18 @@ namespace URI{
 
     void Uri::parse_host(const std::string &authority)
     {
-
         std::smatch match;
-        std::string authority_part = authority;
-        std::size_t pos = authority.find("@");
-        if (pos != -1)
-        {
-            authority_part = authority.substr(pos + 1);
-        }
-        if (std::regex_search(authority_part.cbegin(), authority_part.cend(), match, std::regex(R"((^[a-zA-Z][a-zA-Z+.]*)|(\[([([0-9a-fA-F]{0,4}:){0,7}[0-9a-fA-F]{0,4}\])|(([0-9]{0,3}.){3}([0-9]{0,3}){1}))")))
+        const std::string authority_delimiter{"@"};
+        auto position{authority.find(authority_delimiter)};
+        std::string authority_part = (position != std::string::npos)
+                                         ? authority.substr(position + authority_delimiter.length())
+                                         : authority;
+
+        if (
+            std::regex_search(
+                authority_part.cbegin(), authority_part.cend(), match,
+                std::regex(
+                    R"((^[a-zA-Z][a-zA-Z+.]*)|(\[([([0-9a-fA-F]{0,4}:){0,7}[0-9a-fA-F]{0,4}\])|(([0-9]{0,3}.){3}([0-9]{0,3}){1}))")))
         {
             m_host = *match.begin();
         }

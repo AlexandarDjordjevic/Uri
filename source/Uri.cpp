@@ -127,6 +127,14 @@ namespace URI{
             m_host = *match.begin();
         }
     }
+    void Uri::parse_path(const std::string &uri)
+    {
+        std::smatch match;
+        if (std::regex_search(uri.begin(), uri.end(), match, std::regex("R((?![\\[a-fA-F0-9:*\\]])(?![0-9.*])(((\\/|\\:)[a-zA-Z0-9*]+)+(:|\\/)[a-zA-Z0-9*.]*))")))
+        {
+            m_scheme = *match.begin();
+        }
+    }
 
     void Uri::from_string(const std::string& uri){
         parse_scheme(uri);
@@ -134,6 +142,7 @@ namespace URI{
         parse_userinfo(m_authority);
         parse_host(m_authority);
         parse_port(m_authority);
+        parse_path(uri);
     }  
     
 }//namespace URI

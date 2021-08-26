@@ -202,4 +202,4 @@ TEST(URI_test, parse_path_with_all){
     const std::string test_path = "https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top";
     uri.from_string(test_path);
     ASSERT_EQ("/forum/questions/", uri.get_path());  
-};
+};//

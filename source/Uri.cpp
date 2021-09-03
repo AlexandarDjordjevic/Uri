@@ -127,6 +127,7 @@ namespace URI{
             m_host = *match.begin();
         }
     }
+    
     void Uri::parse_path(const std::string &uri) 
     {
         std::smatch match;

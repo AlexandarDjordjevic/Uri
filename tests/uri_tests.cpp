@@ -201,5 +201,7 @@ TEST(URI_test, parse_path_with_all){
     URI::Uri uri;
     const std::string test_path = "https://john.doe@www.example.com:123/forum/questions/geee.fs?tag=networking&order=newest#top";
     uri.from_string(test_path);
+
     ASSERT_EQ("/forum/questions/geee.fs", uri.get_path());  
 };
+

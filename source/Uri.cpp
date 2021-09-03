@@ -127,7 +127,7 @@ namespace URI{
             m_host = *match.begin();
         }
     }
-    
+
     void Uri::parse_path(const std::string &uri) 
     {
         std::smatch match;
@@ -137,7 +137,7 @@ namespace URI{
                                          ? uri.substr(position + uri_delimiter.length())
                                          : uri;
 
-        if (std::regex_search(uri_part.cbegin(), uri_part.cend(), match, std::regex(R"(\/[a-zA-Z0-9+=@]*[a-zA-Z0-9+.\/]*)")))
+        if (std::regex_search(uri_part.cbegin(), uri_part.cend(), match, std::regex(R"(\/[a-zA-Z0-9+=\_\-@]*[a-zA-Z0-9+.\/\_\-]*)")))
         {
             m_path = *match.begin();
         }

@@ -187,7 +187,7 @@ TEST(URI_test, parse_path_no_path){
     URI::Uri uri;
     const std::string test_path = "telnet://192.0.2.16:80/";
     uri.from_string(test_path);
-    ASSERT_EQ("", uri.get_path());  
+    ASSERT_EQ("/", uri.get_path());  
 };
 
 TEST(URI_test, parse_path_urn){
@@ -199,7 +199,9 @@ TEST(URI_test, parse_path_urn){
 
 TEST(URI_test, parse_path_with_all){
     URI::Uri uri;
-    const std::string test_path = "https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top";
+    const std::string test_path = "https://john.doe@www.example.com:123/forum/questions/geee.fs?tag=networking&order=newest#top";
     uri.from_string(test_path);
-    ASSERT_EQ("/forum/questions/", uri.get_path());  
-};//
+
+    ASSERT_EQ("/forum/questions/geee.fs", uri.get_path());  
+};
+

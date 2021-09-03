@@ -165,6 +165,13 @@ namespace URI
          */
         void parse_port(const std::string &authority);
 
+         /**
+         * @brief Extracting port from the authority 
+         * 
+         * @param authority
+         */
+        void parse_path(const std::string &uri);
+
     private:
 
         /**

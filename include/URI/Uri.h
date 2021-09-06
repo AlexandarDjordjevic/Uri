@@ -172,6 +172,20 @@ namespace URI
          */
         void parse_path(const std::string &uri);
 
+        /**
+         * @brief Extracting query from the uri
+         * 
+         * @param uri 
+         */
+        void parse_query(const std::string &uri);
+
+        /**
+         * @brief Extracting fragment from the uri
+         * 
+         * @param uri 
+         */
+        void parse_fragment(const std::string &uri);
+
     private:
 
         /**

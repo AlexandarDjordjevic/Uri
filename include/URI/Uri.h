@@ -129,7 +129,47 @@ namespace URI
         void from_string(const std::string& uri);
 
     private:
+
+        /**
+         * @brief Extracting the scheme from the uri 
+         * 
+         * @param uri 
+         * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
+         */
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_scheme(const std::string& uri);
     
+        /**
+         * @brief Extracting the authority from the uri 
+         * 
+         * @param begin 
+         * @param end
+         */
+        void parse_authority(std::string::const_iterator& begin, std::string::const_iterator& end);
+
+        /**
+         * @brief Extracting path from the authority 
+         * 
+         * @param begin 
+         * @param end 
+         */
+        void parse_path(std::string::const_iterator &begin, std::string::const_iterator &end);
+
+        /**
+         * @brief Extracting query from the uri
+         * 
+         * @param begin 
+         * @param end  
+         */
+        void parse_query(std::string::const_iterator& begin, std::string::const_iterator& end);
+
+        /**
+         * @brief Extracting fragment from the uri
+         * 
+         * @param begin 
+         * @param end 
+         */
+        void parse_fragment(std::string::const_iterator& begin, std::string::const_iterator& end);
+
         /**
          * @brief Extracting user's info from the authority
          * 
@@ -145,46 +185,11 @@ namespace URI
         void parse_host(const std::string &authority);
 
         /**
-         * @brief Extracting the scheme from the uri 
-         * 
-         * @param uri
-         */
-        void parse_scheme(const std::string& uri);
-
-        /**
-         * @brief Extracting the authority from the uri 
-         * 
-         * @param uri 
-         */
-        void parse_authority(const std::string& uri);
-
-        /**
          * @brief Extracting port from the authority 
          * 
          * @param authority
          */
         void parse_port(const std::string &authority);
-
-         /**
-         * @brief Extracting path from the authority 
-         * 
-         * @param authority
-         */
-        void parse_path(const std::string &uri);
-
-        /**
-         * @brief Extracting query from the uri
-         * 
-         * @param uri 
-         */
-        void parse_query(const std::string &uri);
-
-        /**
-         * @brief Extracting fragment from the uri
-         * 
-         * @param uri 
-         */
-        void parse_fragment(const std::string &uri);
 
     private:
 

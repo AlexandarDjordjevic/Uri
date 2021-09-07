@@ -61,7 +61,7 @@ namespace URI{
         m_query = query;
     }
 
-    void Uri::set_fragments(const std::string& fragments){
+    void Uri::set_fragments(const std::string& fragments){// std::regex("^[a-zA-Z]*[^:]")))
         m_fragments = fragments;
     }
 
@@ -73,7 +73,6 @@ namespace URI{
         {
             m_scheme = *match.begin();
         }
-
         return {(uri.begin() + m_scheme.length()), uri.end()};
     }
 
@@ -184,7 +183,6 @@ namespace URI{
     }
 
     void Uri::parse_fragment(std::string::const_iterator& begin, std::string::const_iterator& end){
-
         std::smatch match;
         const std::string fragment_start{"#"};
 

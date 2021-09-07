@@ -135,9 +135,10 @@ namespace URI{
         auto position_backslashes{uri.find(uri_delimiter_backslash)};
         const std::string uri_delimiter_colon{":"};
         auto position_colon{uri.find(uri_delimiter_colon)};
-        std::string uri_part = (position_backslashes != std::string::npos)? uri.substr(position_backslashes + uri_delimiter_backslash.length()): (position_colon !=std::string::npos)? uri.substr(position_colon + uri_delimiter_colon.length()): uri; //
+        std::string uri_part = (position_backslashes != std::string::npos)? uri.substr(position_backslashes + uri_delimiter_backslash.length()):  uri; //
         std::regex regex_path_start_backslash{R"(\/[a-zA-Z0-9+=\_\-@]*[a-zA-Z0-9+.\/\_\-]*)"};
-        std::regex regex_path_start_colon{R"(:[a-zA-Z0-9+\+-=.@]*[a-zA-Z0-9+.:]*)"};
+        std::regex regex_path_start_colon{R"(\:([a-zA-Z0-9+\+\-=\.@]*[a-zA-Z0-9+.:]*))"};
+
         const auto path_start_delimeter_length = 1;
 
          auto search_path( [](std::string&uri_part, std::regex&regex_path, const u_short&start_delimeter_length) -> std::pair<bool, std::string> 
@@ -146,7 +147,7 @@ namespace URI{
             if (std::regex_search(uri_part.cbegin(), uri_part.cend(), match, regex_path))
             {
                 std::string result{*match.begin()};
-                result.substr(1, result.length());
+                result = result.substr(1, result.length());
                 return { true, result };
             }
         

@@ -61,11 +61,11 @@ namespace URI{
         m_query = query;
     }
 
-    void Uri::set_fragments(const std::string& fragments){
+    void Uri::set_fragments(const std::string& fragments){// std::regex("^[a-zA-Z]*[^:]")))
         m_fragments = fragments;
     }
 
-    void Uri::parse_scheme(const std::string &uri)
+    std::pair<std::string::const_iterator, std::string::const_iterator> Uri::parse_scheme(const std::string &uri)
     {
         std::smatch match;
 
@@ -73,18 +73,21 @@ namespace URI{
         {
             m_scheme = *match.begin();
         }
+        return {(uri.begin() + m_scheme.length()), uri.end()};
     }
 
-    void Uri::parse_authority(const std::string &uri)
+    void Uri::parse_authority(std::string::const_iterator& begin, std::string::const_iterator& end)
     {
         std::smatch match;
         const std::string authority_start{"//"};
 
-        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:.@]*\]?)[^\/\?#])")))
+        if (std::regex_search(begin, end, match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:.@]*\]?)[^\/\?#])")))
         {
             std::string result{*match.begin()};
             m_authority = result.substr(authority_start.length(), result.length());
+            begin = begin + authority_start.length() + m_authority.length();
         }
+
     }
 
     void Uri::parse_port(const std::string &authority)
@@ -128,73 +131,70 @@ namespace URI{
         }
     }
 
-    void Uri::parse_path(const std::string &uri) 
+    void Uri::parse_path(std::string::const_iterator& begin, std::string::const_iterator& end) 
     {
-        
-        const std::string uri_delimiter_backslash{"//"};
-        auto position_backslashes{uri.find(uri_delimiter_backslash)};
-        const std::string uri_delimiter_colon{":"};
-        auto position_colon{uri.find(uri_delimiter_colon)};
-        std::string uri_part = (position_backslashes != std::string::npos)? uri.substr(position_backslashes + uri_delimiter_backslash.length()):  uri; //
         std::regex regex_path_start_backslash{R"(\/[a-zA-Z0-9+=\_\-@]*[a-zA-Z0-9+.\/\_\-]*)"};
         std::regex regex_path_start_colon{R"(\:([a-zA-Z0-9+\+\-=\.@]*[a-zA-Z0-9+.:]*))"};
 
         const auto path_start_delimeter_length = 1;
 
-         auto search_path( [](std::string&uri_part, std::regex&regex_path, const u_short&start_delimeter_length) -> std::pair<bool, std::string> 
-         {
+        auto search_path( []
+        (
+            std::string::const_iterator& begini, std::string::const_iterator& endi,
+                std::regex&regex_path, const u_short&start_delimeter_length) -> std::pair<bool, std::string> 
+        {
             std::smatch match;
-            if (std::regex_search(uri_part.cbegin(), uri_part.cend(), match, regex_path))
+            if (std::regex_search(begini, endi, match, regex_path))
             {
                 std::string result{*match.begin()};
-                result = result.substr(1, result.length());
+                result = result.substr(start_delimeter_length, result.length());
                 return { true, result };
             }
-        
             return {false,{}};  
             
-         });
+        });
             
-        std::pair<bool, std::string> match = search_path(uri_part, regex_path_start_backslash, path_start_delimeter_length);
+        std::pair<bool, std::string> match = search_path(begin, end, regex_path_start_backslash,path_start_delimeter_length);
         if(match.first == false){
-            match = search_path(uri_part, regex_path_start_colon, path_start_delimeter_length);
+            match = search_path(begin, end, regex_path_start_colon, path_start_delimeter_length);
         }
         m_path = match.second;
-        
-        
     };
 
-    void Uri::parse_query(const std::string &uri){
+    void Uri::parse_query(std::string::const_iterator& begin, std::string::const_iterator& end){
         std::smatch match;
         const std::string query_start{"?"};
 
-        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(\?([a-zA-Z0-9+=&%\+\/\.~\-\_\?]*))")))
+        if (std::regex_search(begin, end, match, std::regex(R"(\?([a-zA-Z0-9+=&%\+\/\.~\-\_\?]*))")))
         {
             std::string result{*match.begin()};
-            m_query = result.substr(query_start.length(), result.length()-query_start.length()); 
+            m_query = result.substr(query_start.length(), result.length()-query_start.length());
+            begin = begin + query_start.length() + m_query.length();
         }
     }
 
-    void Uri::parse_fragment(const std::string &uri){
+    void Uri::parse_fragment(std::string::const_iterator& begin, std::string::const_iterator& end){
         std::smatch match;
         const std::string fragment_start{"#"};
 
-        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(\#([\?a-zA-Z0-9+=&\+\-,\!\[\]\:\-\(\))]*)$)")))
+        if (std::regex_search(begin, end, match, std::regex(R"(\#([\?a-zA-Z0-9+=&\+\-,\!\[\]\:\-\(\))]*)$)")))
         {
             std::string result{*match.begin()};
-            m_fragments = result.substr(fragment_start.length(), result.length()-fragment_start.length()); 
+            m_fragments = result.substr(fragment_start.length(), result.length()-fragment_start.length());
+            begin = begin + fragment_start.length() + m_fragments.length();
         }
     }
     
     void Uri::from_string(const std::string& uri){
-        parse_scheme(uri);
-        parse_authority(uri);
+        std::pair<std::string::const_iterator,std::string::const_iterator> uri_iterators;
+        uri_iterators = parse_scheme(uri);
+        parse_authority(uri_iterators.first, uri_iterators.second);
         parse_userinfo(m_authority);
         parse_host(m_authority);
         parse_port(m_authority);
-        parse_path(uri);
-        parse_query(uri);
-        parse_fragment(uri);
+        parse_path(uri_iterators.first, uri_iterators.second);
+        parse_query(uri_iterators.first, uri_iterators.second);
+        parse_fragment(uri_iterators.first, uri_iterators.second);
     }  
     
 }//namespace URI

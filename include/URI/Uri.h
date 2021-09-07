@@ -149,14 +149,14 @@ namespace URI
          * 
          * @param uri
          */
-        void parse_scheme(const std::string& uri);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_scheme(const std::string& uri);
 
         /**
          * @brief Extracting the authority from the uri 
          * 
          * @param uri 
          */
-        void parse_authority(const std::string& uri);
+        void parse_authority(std::string::const_iterator& begin, std::string::const_iterator& end);
 
         /**
          * @brief Extracting port from the authority 
@@ -170,21 +170,21 @@ namespace URI
          * 
          * @param authority
          */
-        void parse_path(const std::string &uri);
+        void parse_path(std::string::const_iterator& begin, std::string::const_iterator& end);
 
         /**
          * @brief Extracting query from the uri
          * 
          * @param uri 
          */
-        void parse_query(const std::string &uri);
+        void parse_query(std::string::const_iterator& begin, std::string::const_iterator& end);
 
         /**
          * @brief Extracting fragment from the uri
          * 
          * @param uri 
          */
-        void parse_fragment(const std::string &uri);
+        void parse_fragment(std::string::const_iterator& begin, std::string::const_iterator& end);
 
     private:
 

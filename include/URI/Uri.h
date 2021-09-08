@@ -144,7 +144,7 @@ namespace URI
          * @param begin 
          * @param end
          */
-        void parse_authority(std::string::const_iterator& begin, std::string::const_iterator& end);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_authority(std::string::const_iterator& begin, std::string::const_iterator& end);
 
         /**
          * @brief Extracting path from the authority 
@@ -152,7 +152,7 @@ namespace URI
          * @param begin 
          * @param end 
          */
-        void parse_path(std::string::const_iterator &begin, std::string::const_iterator &end);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_path(std::string::const_iterator &begin, std::string::const_iterator &end);
 
         /**
          * @brief Extracting query from the uri
@@ -160,7 +160,7 @@ namespace URI
          * @param begin 
          * @param end  
          */
-        void parse_query(std::string::const_iterator& begin, std::string::const_iterator& end);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_query(std::string::const_iterator& begin, std::string::const_iterator& end);
 
         /**
          * @brief Extracting fragment from the uri
@@ -168,28 +168,28 @@ namespace URI
          * @param begin 
          * @param end 
          */
-        void parse_fragment(std::string::const_iterator& begin, std::string::const_iterator& end);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_fragment(std::string::const_iterator& begin, std::string::const_iterator& end);
 
         /**
          * @brief Extracting user's info from the authority
          * 
          * @param authority
          */
-        void parse_userinfo(const std::string &authority);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_userinfo(std::string::const_iterator& begin, const std::string& authority);
 
         /**
          * @brief Extracting host from the authority
          * 
          * @param authority
          */
-        void parse_host(const std::string &authority);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_host(std::string::const_iterator& begin, std::string::const_iterator& end);
 
         /**
          * @brief Extracting port from the authority 
          * 
          * @param authority
          */
-        void parse_port(const std::string &authority);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_port(std::string::const_iterator& begin, std::string::const_iterator& end);
 
     private:
 

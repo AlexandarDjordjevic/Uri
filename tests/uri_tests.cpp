@@ -133,6 +133,12 @@ TEST(URI_test, parse_host_without_userinfo){
     uri.from_string(test_uri);
     ASSERT_EQ("google.csds.com", uri.get_host());  
 };
+TEST(URI_test, parse_port_without_userinfo){
+    URI::Uri uri;
+    const auto test_uri{"http://google.csds.com:8080"};
+    uri.from_string(test_uri);
+    ASSERT_EQ("8080", uri.get_port());  
+};
 
 TEST(URI_test, parse_host_without_port){
     URI::Uri uri;
@@ -140,7 +146,12 @@ TEST(URI_test, parse_host_without_port){
     uri.from_string(test_uri);
     ASSERT_EQ("google.csds.com", uri.get_host());  
 };
-
+TEST(URI_test, parse_userinfo_without_port){
+    URI::Uri uri;
+    const auto test_uri{"http://csdv@google.csds.com"};
+    uri.from_string(test_uri);
+    ASSERT_EQ("csdv", uri.get_userinfo());  
+};
 TEST(URI_test, parse_host_without_port_ipv6){
     URI::Uri uri;
     const auto test_uri{"http://[5655:43:4343:76dd:::]"};
@@ -260,16 +271,3 @@ TEST(URI_test, parse_fragment_with_brackets){
     ASSERT_EQ("match=[rR][fF][cC]", uri.get_fragments());  
 };
 
-TEST(URI_test, parse_fragment_with_colon){
-    URI::Uri uri;
-    const auto test_uri{"http://example.com/index.html#:words:some-context-for-a-(search-term)"};
-    uri.from_string(test_uri);
-    ASSERT_EQ(":words:some-context-for-a-(search-term)", uri.get_fragments());  
-};
-
-TEST(URI_test, parse_fragment_with_numbers){
-    URI::Uri uri;
-    const auto test_uri{"http://example.com/index.html#115Fragm8+-52f89c4c"};
-    uri.from_string(test_uri);
-    ASSERT_EQ("115Fragm8+-52f89c4c", uri.get_fragments());  
-};

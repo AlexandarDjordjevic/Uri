@@ -131,6 +131,7 @@ namespace URI{
         }
     }
 
+
     void Uri::parse_path(std::string::const_iterator& begin, std::string::const_iterator& end) 
     {
         std::regex regex_path_start_backslash{R"(\/[a-zA-Z0-9+=\_\-@]*[a-zA-Z0-9+.\/\_\-]*)"};
@@ -168,7 +169,7 @@ namespace URI{
         m_path = match.second;
     
     };
-
+  
     void Uri::parse_query(std::string::const_iterator& begin, std::string::const_iterator& end){
 
         std::smatch match;
@@ -204,6 +205,7 @@ namespace URI{
         parse_path(uri_iterators.first, uri_iterators.second);
         parse_query(uri_iterators.first, uri_iterators.second);
         parse_fragment(uri_iterators.first, uri_iterators.second);
+
     }  
     
 }//namespace URI

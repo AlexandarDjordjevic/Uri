@@ -174,17 +174,15 @@ namespace URI
         /**
          * @brief Extracting user's info from the authority
          * 
-         * @param begin 
-         * @param authority 
          * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_userinfo(std::string::const_iterator& begin, const std::string& authority);
+        std::pair<std::string::const_iterator, std::string::const_iterator> parse_userinfo();
 
         /**
          * @brief Extracting host from the authority
          * 
-         * @param begin 
-         * @param end 
+         * @param begin Begining of host part of the authority
+         * @param end Ending of uri's authority
          * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
          */
         std::pair<std::string::const_iterator, std::string::const_iterator> parse_host(std::string::const_iterator& begin, std::string::const_iterator& end);
@@ -192,11 +190,10 @@ namespace URI
         /**
          * @brief Extracting port from the authority 
          * 
-         * @param begin 
-         * @param end 
-         * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
+         * @param begin Begining of port part of the authority
+         * @param end Ending of uri's authority
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_port(std::string::const_iterator& begin, std::string::const_iterator& end);
+        void parse_port(std::string::const_iterator& begin, std::string::const_iterator& end);
 
     private:
 

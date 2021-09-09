@@ -285,16 +285,43 @@ TEST(URI_test, parse_userinfo_git){
     ASSERT_EQ("", uri.get_userinfo()); 
 };
 
-TEST(URI_test, parse_userinfo_ipv6_with_path){
-    URI::Uri uri;
-    const auto test_uri{"ldap://[2001:db8::7]/c=GB?objectClass?one"};
-    uri.from_string(test_uri);
-    ASSERT_EQ("", uri.get_userinfo());  
-};
-
-TEST(URI_test, parse_userinfo_ipv6_without_path){
+TEST(URI_test, parse_userinfo_userinfocolon){
     URI::Uri uri;
     const auto test_uri{"https://user:pass@sub.example.com:8080/path?query#fragment"};
     uri.from_string(test_uri);
     ASSERT_EQ("user:pass", uri.get_userinfo());  
+};
+
+
+TEST(URI_test, parse_user_dot_delimeter){
+    URI::Uri uri;
+    const auto test_uri{"https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top"};
+    uri.from_string(test_uri);
+    ASSERT_EQ("john.doe", uri.get_userinfo());  
+};
+
+TEST(URI_test, parse_scheme__ftp){
+    URI::Uri uri;
+    const auto test_uri{"ftp://tray:5uQQo_f@ftp.example.com:2021/"};
+    uri.from_string(test_uri);
+    ASSERT_EQ("ftp", uri.get_scheme());  
+};
+TEST(URI_test, parse_userinfo_ftp){
+    URI::Uri uri;
+    const auto test_uri{"ftp://tray:5_uQQf@ftp.example.com:2021/"};
+    uri.from_string(test_uri);
+    ASSERT_EQ("tray:5_uQQf", uri.get_userinfo());  
+};
+
+TEST(URI_test, parse_host_ftp){
+    URI::Uri uri;
+    const auto test_uri{"ftp://trayuQQof@ftp.example.com:2021/"};
+    uri.from_string(test_uri);
+    ASSERT_EQ("ftp.example.com", uri.get_host());  
+};
+TEST(URI_test, parse_port_ftp){
+    URI::Uri uri;
+    const auto test_uri{"ftp://tray:5uQQo_f@ftp.example.com:2021/"};
+    uri.from_string(test_uri);
+    ASSERT_EQ("2021", uri.get_port());  
 };

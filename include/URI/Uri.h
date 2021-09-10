@@ -10,8 +10,11 @@
 #pragma once
 #include <string>
 
+
 namespace URI
 {
+    using iterator_pairs = std::pair<std::string::const_iterator, std::string::const_iterator>;
+    
     class Uri{
     public:
 
@@ -89,41 +92,6 @@ namespace URI
         std::string get_fragments();
 
         /**
-         * @brief Set the scheme object
-         * 
-         * @param scheme 
-         */
-        void set_scheme(const std::string &scheme);
-
-        /**
-         * @brief Set the authority object
-         * 
-         * @param authority 
-         */
-        void set_authority(const std::string &authority);
-
-        /**
-         * @brief Set the path object
-         * 
-         * @param path 
-         */
-        void set_path(const std::string &path);
-        
-        /**
-         * @brief Set the query object
-         * 
-         * @param query 
-         */
-        void set_query(const std::string &query);
-
-        /**
-         * @brief Set the fragments object
-         * 
-         * @param fragments 
-         */
-        void set_fragments(const std::string &fragments);
-
-        /**
          * @brief Extracting components from the uri
          */
         void from_string(const std::string& uri);
@@ -134,66 +102,63 @@ namespace URI
          * @brief Extracting the scheme from the uri 
          * 
          * @param uri 
-         * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
+         * @return iterator_pairs 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_scheme(const std::string& uri);
+        iterator_pairs parse_scheme(const std::string& uri);
     
         /**
          * @brief Extracting the authority from the uri 
          * 
-         * @param begin 
-         * @param end
+         * @param uri_iterators 
+         * @return iterator_pairs 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_authority(std::string::const_iterator& begin, std::string::const_iterator& end);
+        iterator_pairs parse_authority(iterator_pairs& uri_iterators);
 
         /**
          * @brief Extracting path from the authority 
          * 
-         * @param begin 
-         * @param end 
+         * @param uri_iterators 
+         * @return iterator_pairs 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_path(std::string::const_iterator &begin, std::string::const_iterator &end);
+        iterator_pairs parse_path(iterator_pairs& uri_iterators);
 
         /**
          * @brief Extracting query from the uri
          * 
-         * @param begin 
-         * @param end  
+         * @param uri_iterators 
+         * @return iterator_pairs 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_query(std::string::const_iterator& begin, std::string::const_iterator& end);
+        iterator_pairs parse_query(iterator_pairs& uri_iterators);
 
         /**
          * @brief Extracting fragment from the uri
          * 
-         * @param begin 
-         * @param end 
-         * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
+         * @param uri_iterators 
+         * @return iterator_pairs 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_fragment(std::string::const_iterator& begin, std::string::const_iterator& end);
+        iterator_pairs parse_fragment(iterator_pairs& uri_iterators);
 
         /**
          * @brief Extracting user's info from the authority
          * 
-         * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
+         * @return iterator_pairs 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_userinfo();
+        iterator_pairs parse_userinfo();
 
         /**
          * @brief Extracting host from the authority
          * 
-         * @param begin Begining of host part of the authority
-         * @param end Ending of uri's authority
-         * @return std::pair<std::string::const_iterator, std::string::const_iterator> 
+         * @param auth_iterators 
+         * @return iterator_pairs 
          */
-        std::pair<std::string::const_iterator, std::string::const_iterator> parse_host(std::string::const_iterator& begin, std::string::const_iterator& end);
+        iterator_pairs parse_host(iterator_pairs& auth_iterators);
 
         /**
          * @brief Extracting port from the authority 
          * 
-         * @param begin Begining of port part of the authority
-         * @param end Ending of uri's authority
+         * @param auth_iterators 
          */
-        void parse_port(std::string::const_iterator& begin, std::string::const_iterator& end);
+        void parse_port(iterator_pairs& auth_iterators);
 
     private:
 

@@ -68,8 +68,12 @@ namespace URI{
             m_authority = result.substr(authority_start.length(), result.length());
             return {uri_iterators.first + authority_start.length() + m_authority.length(),uri_iterators.second};
         }
+<<<<<<< HEAD
         return {uri_iterators.first,uri_iterators.second};
 
+=======
+        return { begin , end };
+>>>>>>> 6a46e4973b22d9f85e4970282e6102dfce2ef056
     }
 
     iterator_pairs Uri::parse_userinfo()
@@ -149,8 +153,12 @@ namespace URI{
 
         m_path = match.second;
         
+<<<<<<< HEAD
         return {uri_iterators.first,uri_iterators.second};
     
+=======
+        return { begin , end };    
+>>>>>>> 6a46e4973b22d9f85e4970282e6102dfce2ef056
     }
 
     iterator_pairs Uri::parse_query(iterator_pairs& uri_iterators){

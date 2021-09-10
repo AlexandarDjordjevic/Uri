@@ -133,6 +133,7 @@ TEST(URI_test, parse_host_without_userinfo){
     uri.from_string(test_uri);
     ASSERT_EQ("google.csds.com", uri.get_host());  
 };
+
 TEST(URI_test, parse_port_without_userinfo){
     URI::Uri uri;
     const auto test_uri{"http://google.csds.com:8080"};
@@ -146,12 +147,14 @@ TEST(URI_test, parse_host_without_port){
     uri.from_string(test_uri);
     ASSERT_EQ("google.csds.com", uri.get_host());  
 };
+
 TEST(URI_test, parse_userinfo_without_port){
     URI::Uri uri;
     const auto test_uri{"http://csdv@google.csds.com"};
     uri.from_string(test_uri);
     ASSERT_EQ("csdv", uri.get_userinfo());  
 };
+
 TEST(URI_test, parse_host_without_port_ipv6){
     URI::Uri uri;
     const auto test_uri{"http://[5655:43:4343:76dd:::]"};
@@ -292,7 +295,6 @@ TEST(URI_test, parse_userinfo_userinfocolon){
     ASSERT_EQ("user:pass", uri.get_userinfo());  
 };
 
-
 TEST(URI_test, parse_user_dot_delimeter){
     URI::Uri uri;
     const auto test_uri{"https://john.doe@www.example.com:123/forum/questions/?tag=networking&order=newest#top"};
@@ -306,6 +308,7 @@ TEST(URI_test, parse_scheme__ftp){
     uri.from_string(test_uri);
     ASSERT_EQ("ftp", uri.get_scheme());  
 };
+
 TEST(URI_test, parse_userinfo_ftp){
     URI::Uri uri;
     const auto test_uri{"ftp://tray:5_uQQf@ftp.example.com:2021/"};
@@ -319,6 +322,7 @@ TEST(URI_test, parse_host_ftp){
     uri.from_string(test_uri);
     ASSERT_EQ("ftp.example.com", uri.get_host());  
 };
+
 TEST(URI_test, parse_port_ftp){
     URI::Uri uri;
     const auto test_uri{"ftp://tray:5uQQo_f@ftp.example.com:2021/"};

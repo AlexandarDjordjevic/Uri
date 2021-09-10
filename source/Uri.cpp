@@ -89,7 +89,6 @@ namespace URI{
             return { begin + authority_start.length() + m_authority.length(), end };
         }
         return { begin , end };
-
     }
 
     std::pair<std::string::const_iterator, std::string::const_iterator> Uri::parse_userinfo()
@@ -169,8 +168,7 @@ namespace URI{
 
         m_path = match.second;
         
-        return { begin , end };
-    
+        return { begin , end };    
     }
 
     std::pair<std::string::const_iterator, std::string::const_iterator> Uri::parse_query(std::string::const_iterator& begin, std::string::const_iterator& end){

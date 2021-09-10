@@ -13,8 +13,8 @@
 
 namespace URI
 {
-    using iterator_pairs = std::pair<std::string::const_iterator, std::string::const_iterator>;
-    
+    using remining_uri = std::pair<std::string::const_iterator, std::string::const_iterator>;
+
     class Uri{
     public:
 
@@ -102,63 +102,63 @@ namespace URI
          * @brief Extracting the scheme from the uri 
          * 
          * @param uri 
-         * @return iterator_pairs 
+         * @return remining_uri 
          */
-        iterator_pairs parse_scheme(const std::string& uri);
+        remining_uri parse_scheme(const std::string& uri);
     
         /**
          * @brief Extracting the authority from the uri 
          * 
-         * @param uri_iterators 
-         * @return iterator_pairs 
+         * @param uri_positions 
+         * @return remining_uri 
          */
-        iterator_pairs parse_authority(iterator_pairs& uri_iterators);
+        remining_uri parse_authority(const remining_uri& uri_positions);
 
         /**
          * @brief Extracting path from the authority 
          * 
-         * @param uri_iterators 
-         * @return iterator_pairs 
+         * @param uri_positions 
+         * @return remining_uri 
          */
-        iterator_pairs parse_path(iterator_pairs& uri_iterators);
+        remining_uri parse_path(const remining_uri& uri_positions);
 
         /**
          * @brief Extracting query from the uri
          * 
-         * @param uri_iterators 
-         * @return iterator_pairs 
+         * @param uri_positions 
+         * @return remining_uri 
          */
-        iterator_pairs parse_query(iterator_pairs& uri_iterators);
+        remining_uri parse_query(const remining_uri& uri_positions);
 
         /**
          * @brief Extracting fragment from the uri
          * 
-         * @param uri_iterators 
-         * @return iterator_pairs 
+         * @param uri_positions 
+         * @return remining_uri 
          */
-        iterator_pairs parse_fragment(iterator_pairs& uri_iterators);
+        remining_uri parse_fragment(const remining_uri& uri_positions);
 
         /**
          * @brief Extracting user's info from the authority
          * 
-         * @return iterator_pairs 
+         * @return remining_uri 
          */
-        iterator_pairs parse_userinfo();
+        remining_uri parse_userinfo();
 
         /**
          * @brief Extracting host from the authority
          * 
-         * @param auth_iterators 
-         * @return iterator_pairs 
+         * @param auth_positions 
+         * @return remining_uri 
          */
-        iterator_pairs parse_host(iterator_pairs& auth_iterators);
+        remining_uri parse_host(const remining_uri& auth_positions);
 
         /**
          * @brief Extracting port from the authority 
          * 
-         * @param auth_iterators 
+         * @param auth_positions 
          */
-        void parse_port(iterator_pairs& auth_iterators);
+        void parse_port(const remining_uri& auth_positions);
 
     private:
 

@@ -45,8 +45,8 @@ namespace URI{
     std::string Uri::get_fragments(){
         return m_fragments;
     }
-    
-    iterator_pairs Uri::parse_scheme(const std::string &uri)
+
+    remining_uri Uri::parse_scheme(const std::string &uri)
     {
         std::smatch match;
 
@@ -57,26 +57,22 @@ namespace URI{
         return {(uri.begin() + m_scheme.length()), uri.end()};
     }
 
-    iterator_pairs Uri::parse_authority(iterator_pairs& uri_iterators)
+    remining_uri Uri::parse_authority(const remining_uri& uri_positions)
     {
         std::smatch match;
         const std::string authority_start{"//"};
 
-        if (std::regex_search(uri_iterators.first, uri_iterators.second, match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:\_\.@]*\]?)[^\/\?#])")))
+        if (std::regex_search(uri_positions.first, uri_positions.second, match, std::regex(R"(\/\/(\[?[a-zA-Z0-9:\_\.@]*\]?)[^\/\?#])")))
         {
             std::string result{*match.begin()};
             m_authority = result.substr(authority_start.length(), result.length());
-            return {uri_iterators.first + authority_start.length() + m_authority.length(),uri_iterators.second};
+            return {uri_positions.first + authority_start.length() + m_authority.length(),uri_positions.second};
         }
-<<<<<<< HEAD
-        return {uri_iterators.first,uri_iterators.second};
+        return { uri_positions};
 
-=======
-        return { begin , end };
->>>>>>> 6a46e4973b22d9f85e4970282e6102dfce2ef056
     }
 
-    iterator_pairs Uri::parse_userinfo()
+    remining_uri Uri::parse_userinfo()
     {
         std::smatch match;
         std::string::const_iterator auth_begin {m_authority.begin()};
@@ -93,48 +89,47 @@ namespace URI{
         return { auth_begin, auth_end };
     }
 
-    iterator_pairs Uri::parse_host(iterator_pairs& auth_iterators)
+    remining_uri Uri::parse_host(const remining_uri& auth_positions)
     {
         std::smatch match;
-        if (std::regex_search( auth_iterators.first, auth_iterators.second, match,
+        if (std::regex_search( auth_positions.first, auth_positions.second, match,
                 std::regex(
                     R"((^[a-zA-Z][a-zA-Z+\_\.]*)|(\[([([0-9a-fA-F]{0,4}:){0,7}[0-9a-fA-F]{0,4}\])|(([0-9]{0,3}.){3}([0-9]{0,3}){1}))")))
         {
             m_host = *match.begin();
-            return {auth_iterators.first + m_host.length(), auth_iterators.second};
+            return {auth_positions.first + m_host.length(), auth_positions.second};
         }
-        return {auth_iterators.first, auth_iterators.second};
+        return {auth_positions};
     }
 
-    void Uri::parse_port(iterator_pairs& auth_iterators)
+    void Uri::parse_port(const remining_uri& auth_positions)
     {
         std::smatch match;
         const std::string port_start{":"};
-        if (std::regex_search( auth_iterators.first, auth_iterators.second, match, std::regex(R"(\:([0-9]{0,4}))")))
+        if (std::regex_search( auth_positions.first, auth_positions.second, match, std::regex(R"(\:([0-9]{0,4}))")))
         {
             std::string result{*match.begin()};
             m_port = result.substr(port_start.length(), result.length()- port_start.length());
         }
     }
 
-    iterator_pairs Uri::parse_path(iterator_pairs& uri_iterators) 
+    remining_uri Uri::parse_path(const remining_uri& uri_positions) 
     {
         std::regex regex_path_start_backslash{R"(\/[a-zA-Z0-9+=\_\-@]*[a-zA-Z0-9+.\/\_\-]*)"};
         std::regex regex_path_start_colon{R"(\:([a-zA-Z0-9+\+\-=\.@]*[a-zA-Z0-9+.:]*))"};
 
         const auto path_start_delimeter_length = 1;
+        remining_uri uri_path_part{uri_positions};
 
-        auto search_path( []
-        (
-            std::string::const_iterator& begini, std::string::const_iterator& endi,
-                std::regex&regex_path, const u_short&start_delimeter_length) -> std::pair<bool, std::string> 
+        const auto search_path( []
+        (remining_uri& uri_path_part, std::regex&regex_path, const u_short&start_delimeter_length) -> std::pair<bool, std::string> 
         {
             std::smatch match;
-            if (std::regex_search(begini, endi, match, regex_path))
+            if (std::regex_search(uri_path_part.first, uri_path_part.second, match, regex_path))
             {
                 std::string result{*match.begin()};
                 result = result.substr(start_delimeter_length, result.length());
-                begini = begini + start_delimeter_length + result.length();
+                uri_path_part.first = uri_path_part.first + start_delimeter_length + result.length();
 
                 return { true, result };
             }
@@ -144,64 +139,60 @@ namespace URI{
         });
             
         std::pair<bool, std::string> match;
-        match = search_path(uri_iterators.first, uri_iterators.second, regex_path_start_backslash,path_start_delimeter_length);
+        match = search_path(uri_path_part, regex_path_start_backslash, path_start_delimeter_length);
         
         if(match.first == false)
         {
-            match = search_path(uri_iterators.first, uri_iterators.second, regex_path_start_colon, path_start_delimeter_length);
+            match = search_path(uri_path_part, regex_path_start_colon, path_start_delimeter_length);
         }
 
         m_path = match.second;
         
-<<<<<<< HEAD
-        return {uri_iterators.first,uri_iterators.second};
+        return {uri_path_part};
     
-=======
-        return { begin , end };    
->>>>>>> 6a46e4973b22d9f85e4970282e6102dfce2ef056
     }
 
-    iterator_pairs Uri::parse_query(iterator_pairs& uri_iterators){
+    remining_uri Uri::parse_query(const remining_uri& uri_positions){
 
         std::smatch match;
         const std::string query_start{"?"};
 
-        if (std::regex_search(uri_iterators.first, uri_iterators.second, match, std::regex(R"(\?([a-zA-Z0-9+=&%\+\/\.~\-\_\?]*))")))
+        if (std::regex_search(uri_positions.first, uri_positions.second, match, std::regex(R"(\?([a-zA-Z0-9+=&%\+\/\.~\-\_\?]*))")))
         {
             std::string result{*match.begin()};
             m_query = result.substr(query_start.length(), result.length()-query_start.length());
-            return {uri_iterators.first+ query_start.length() + m_query.length() ,uri_iterators.second};;
+            return {uri_positions.first+ query_start.length() + m_query.length() ,uri_positions.second};;
         }
-        return {uri_iterators.first,uri_iterators.second};
+        return {uri_positions};
     }
 
-    iterator_pairs Uri::parse_fragment(iterator_pairs& uri_iterators){
+    remining_uri Uri::parse_fragment(const remining_uri& uri_positions){
         std::smatch match;
         const std::string fragment_start{"#"};
 
-        if (std::regex_search(uri_iterators.first, uri_iterators.second, match, std::regex(R"(\#([\?a-zA-Z0-9+=&\+\-,\!\[\]\:\-\(\))]*)$)")))
+        if (std::regex_search(uri_positions.first, uri_positions.second, match, std::regex(R"(\#([\?a-zA-Z0-9+=&\+\-,\!\[\]\:\-\(\))]*)$)")))
         {
             std::string result{*match.begin()};
             m_fragments = result.substr(fragment_start.length(), result.length()-fragment_start.length());
             
-            return {uri_iterators.first+ fragment_start.length() + m_fragments.length(),uri_iterators.second};;
+            return {uri_positions.first+ fragment_start.length() + m_fragments.length(),uri_positions.second};;
         }
-        return {uri_iterators.first,uri_iterators.second};
+        return {uri_positions};
     }
     
     void Uri::from_string(const std::string& uri){
-        iterator_pairs uri_iterators;
-        uri_iterators = parse_scheme(uri);
-        uri_iterators = parse_authority(uri_iterators);
+        remining_uri uri_positions;
+        uri_positions = parse_scheme(uri);
+        uri_positions = parse_authority(uri_positions);
        
-        iterator_pairs auth_iterators;
-        auth_iterators = parse_userinfo();
-        auth_iterators = parse_host(auth_iterators);
-        parse_port(auth_iterators);
+        remining_uri auth_positions;
+        auth_positions = parse_userinfo();
+        auth_positions = parse_host(auth_positions);
+        parse_port(auth_positions);
         
-        uri_iterators = parse_path(uri_iterators);
-        uri_iterators = parse_query(uri_iterators);
-        uri_iterators = parse_fragment(uri_iterators);
+        uri_positions = parse_path(uri_positions);
+        uri_positions = parse_query(uri_positions);
+        uri_positions = parse_fragment(uri_positions);
     }  
     
 }//namespace URI

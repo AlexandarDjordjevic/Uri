@@ -13,7 +13,7 @@
 
 namespace URI
 {
-    using remining_uri = std::pair<std::string::const_iterator, std::string::const_iterator>;
+    using remaining_uri = std::pair<std::string::const_iterator, std::string::const_iterator>;
 
     class Uri{
     public:
@@ -102,63 +102,63 @@ namespace URI
          * @brief Extracting the scheme from the uri 
          * 
          * @param uri 
-         * @return remining_uri 
+         * @return remaining_uri 
          */
-        remining_uri parse_scheme(const std::string& uri);
+        remaining_uri parse_scheme(const std::string& uri);
     
         /**
          * @brief Extracting the authority from the uri 
          * 
          * @param uri_positions 
-         * @return remining_uri 
+         * @return remaining_uri 
          */
-        remining_uri parse_authority(const remining_uri& uri_positions);
+        remaining_uri parse_authority(const remaining_uri& uri_positions);
 
         /**
          * @brief Extracting path from the authority 
          * 
          * @param uri_positions 
-         * @return remining_uri 
+         * @return remaining_uri 
          */
-        remining_uri parse_path(const remining_uri& uri_positions);
+        remaining_uri parse_path(const remaining_uri& uri_positions);
 
         /**
          * @brief Extracting query from the uri
          * 
          * @param uri_positions 
-         * @return remining_uri 
+         * @return remaining_uri 
          */
-        remining_uri parse_query(const remining_uri& uri_positions);
+        remaining_uri parse_query(const remaining_uri& uri_positions);
 
         /**
          * @brief Extracting fragment from the uri
          * 
          * @param uri_positions 
-         * @return remining_uri 
+         * @return remaining_uri 
          */
-        remining_uri parse_fragment(const remining_uri& uri_positions);
+        remaining_uri parse_fragment(const remaining_uri& uri_positions);
 
         /**
          * @brief Extracting user's info from the authority
          * 
-         * @return remining_uri 
+         * @return remaining_uri 
          */
-        remining_uri parse_userinfo();
+        remaining_uri parse_userinfo();
 
         /**
          * @brief Extracting host from the authority
          * 
          * @param auth_positions 
-         * @return remining_uri 
+         * @return remaining_uri 
          */
-        remining_uri parse_host(const remining_uri& auth_positions);
+        remaining_uri parse_host(const remaining_uri& auth_positions);
 
         /**
          * @brief Extracting port from the authority 
          * 
          * @param auth_positions 
          */
-        void parse_port(const remining_uri& auth_positions);
+        void parse_port(const remaining_uri& auth_positions);
 
     private:
 
@@ -199,7 +199,7 @@ namespace URI
         std::string m_path;
 
         /**
-         * @brief Value for querry from uri
+         * @brief Value for query from uri
          * 
          */
         std::string m_query;

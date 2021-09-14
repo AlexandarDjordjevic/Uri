@@ -16,4 +16,4 @@ add_library(${this} SHARED ${source})
 
 target_include_directories(${this} PUBLIC include)
 
-# add_subdirectory(tests)
+add_subdirectory(tests)

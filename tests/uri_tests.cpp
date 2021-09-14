@@ -218,6 +218,13 @@ TEST(URI_test, parse_path_with_all){
     ASSERT_EQ("forum/questions/geee.fs", uri.get_path());  
 };
 
+TEST(URI_test, parse_absolute_path){
+    URI::Uri uri;
+    const auto test_uri{"/forum/questions/geee.fs"};
+    uri.from_string(test_uri);
+    //ASSERT_EQ("/", uri.get_scheme());
+    ASSERT_EQ("forum/questions/geee.fs", uri.get_path());  
+};
 TEST(URI_test, parse_path_git){
  URI::Uri uri;
  const auto test_uri{"git://github.com/user/project-name.git"};

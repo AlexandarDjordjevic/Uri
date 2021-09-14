@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-set(this uri_project)
+set(this uri)
 
 project(${this})
 
@@ -11,22 +11,9 @@ set(CMAKE_CXX_STANDARD 11)
 set(source
         source/Uri.cpp
     )
-include_directories(${this} include)
 
-# Locate GTest
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
+add_library(${this} SHARED ${source})
 
-add_library(${this} ${source})
+target_include_directories(${this} PUBLIC include)
 
-# Link runTests with what we want to test and the GTest and pthread library
-target_link_libraries(${this} 
-                        ${GTEST_BOTH_LIBRARIES}
-                        pthread
-                        )
-
-add_test(
-    NAME ${this}
-    COMMAND ${this}
-)
-add_subdirectory(tests)
+# add_subdirectory(tests)

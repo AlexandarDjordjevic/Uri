@@ -50,7 +50,7 @@ namespace URI{
     {
         std::smatch match;
 
-        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(^[a-zA-Z]*[^:])")))
+        if (std::regex_search(uri.begin(), uri.end(), match, std::regex(R"(^[a-zA-Z]+[^:])")))
         {
             m_scheme = *match.begin();
         }
